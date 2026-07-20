@@ -28,10 +28,10 @@ const YouTubeIcon = ({ className }) => (
 );
 
 const socialLinks = [
-  { name: 'TikTok',    icon: <TikTokIcon    className="w-7 h-7" />, href: '#' },
-  { name: 'Instagram', icon: <InstagramIcon className="w-7 h-7" />, href: '#' },
-  { name: 'Facebook',  icon: <FacebookIcon  className="w-7 h-7" />, href: '#' },
-  { name: 'YouTube',   icon: <YouTubeIcon   className="w-7 h-7" />, href: '#' },
+  { name: 'TikTok',    icon: <TikTokIcon    className="w-7 h-7" />, href: 'https://www.tiktok.com/@join.arc' },
+  { name: 'Instagram', icon: <InstagramIcon className="w-7 h-7" />, href: 'https://www.instagram.com/join.arc' },
+  { name: 'Facebook',  icon: <FacebookIcon  className="w-7 h-7" />, href: 'https://www.facebook.com/people/AbdulRehman-Cheema/61576562944636/' },
+  { name: 'YouTube',   icon: <YouTubeIcon   className="w-7 h-7" />, href: 'https://www.youtube.com/@join.arc.' },
 ];
 
 export default function SocialMedia() {
