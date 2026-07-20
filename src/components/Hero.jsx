@@ -4,11 +4,11 @@ import therapistImg from '../assets/IMG_7991.jpeg';
 
 export default function Hero() {
   const tags = [
-    'Self-development',
-    'Relationships',
-    'Career decisions',
-    'Marital challenges',
-    'Spiritual well-being'
+    'Career Decisions',
+    'Self-Development',
+    'Relationships Issues',
+    'Marital Challenges',
+    'Spiritual Well-Being'
   ];
 
   return (
