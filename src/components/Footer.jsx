@@ -63,15 +63,15 @@ export default function Footer() {
             <ul className="space-y-4 text-sm">
               <li className="flex items-center gap-3 text-[var(--neu-text)] transition-colors duration-300">
                 <Mail className="w-4 h-4 text-[var(--neu-accent)] flex-shrink-0 transition-colors duration-300" />
-                <span>info@therapyarc.com</span>
+                <span>info@abdulrehmancheema.com</span>
               </li>
               <li className="flex items-center gap-3 text-[var(--neu-text)] transition-colors duration-300">
                 <Phone className="w-4 h-4 text-[var(--neu-accent)] flex-shrink-0 transition-colors duration-300" />
-                <span>+92 (300) 123-4567</span>
+                <span>+92 (345) 861-2538</span>
               </li>
               <li className="flex items-center gap-3 text-[var(--neu-text)] transition-colors duration-300">
                 <MessageCircle className="w-4 h-4 text-[var(--neu-accent)] flex-shrink-0 transition-colors duration-300" />
-                <span>WhatsApp: +92 (300) 123-4567</span>
+                <span>WhatsApp: +92 (345) 861-2538</span>
               </li>
             </ul>
           </div>
