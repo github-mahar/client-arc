@@ -34,7 +34,7 @@ export default function WhyCounseling() {
           >
             {/* Label */}
             <p className="text-xs font-bold uppercase tracking-widest mb-5 text-[var(--neu-accent)] transition-colors duration-300">
-              Quran Verse
+              Quranic Verse
             </p>
             {/* Arabic Text block */}
             <div className="text-right mb-6">
