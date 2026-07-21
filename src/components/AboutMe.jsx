@@ -5,8 +5,8 @@ export default function AboutMe() {
   const features = [
     {
       icon: <UserCheck className="w-6 h-6 text-[var(--neu-accent)]" />,
-      title: 'Experienced Counselor',
-      description: 'Over 8 years of clinical experience guiding couples through complex relationship hurdles.',
+      title: 'Certifications',
+      description: 'Currently pursuing BS in Psychology through University of Islamabad. Having 05 years of practical experience connecting scholars, counsellors and directly to youth helping them overcoming their physical, mental, social, financial & spiritual health.',
     },
     {
       icon: <Scale className="w-6 h-6 text-[var(--neu-accent)]" />,

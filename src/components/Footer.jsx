@@ -9,10 +9,12 @@ export default function Footer() {
 
           {/* Brand Col */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
+            <a href="#" className="flex items-center gap-2">
               <img src={logo} alt="ARC Logo" className="h-8 w-auto" />
-              <h3 className="text-2xl font-bold tracking-wide text-[var(--neu-text)] transition-colors duration-300">ARC</h3>
-            </div>
+              <span className="text-2xl font-bold tracking-tight transition-colors" style={{ color: 'var(--neu-accent)' }}>
+                ARC
+              </span>
+            </a>
             <p className="text-sm leading-relaxed text-[var(--neu-text-muted)] transition-colors duration-300">
               Abdul Rehman Cheema — Islamic counselor blending Psychology, Neuroscience, and Shariah to provide practical guidance.
             </p>
