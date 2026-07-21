@@ -86,7 +86,7 @@ export default function WhatsAppWidget() {
                 fontFamily: "'El Messiri', sans-serif",
               }}
             >
-              ARC Counseling
+              ARC Counselling
             </div>
             <div
               style={{
