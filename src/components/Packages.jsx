@@ -12,7 +12,7 @@ const packages = [
   {
     id: '3sessions',
     name: '3 Sessions Package',
-    description: 'Deep-dive counseling to unpack emotional blocks, establish therapeutic goals, and build resilience.',
+    description: 'Deep-dive counselling to unpack emotional blocks, establish therapeutic goals, and build resilience.',
     price: 'PKR 13,500',
     duration: '3 Sessions',
     isPopular: true,

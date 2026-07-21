@@ -6,7 +6,7 @@ export default function AboutMe() {
     {
       icon: <UserCheck className="w-6 h-6 text-[var(--neu-accent)]" />,
       title: 'Certifications',
-      description: 'Currently pursuing BS in Psychology through University of Islamabad. Having 05 years of practical experience connecting scholars, counsellors and directly to youth helping them overcoming their physical, mental, social, financial & spiritual health.',
+      description: 'Currently pursuing BS in Psychology through **** University Islamabad. Having 05 years of practical experience connecting scholars, counsellors and directly to youth helping them overcoming their physical, mental, social, financial & spiritual health.',
     },
     {
       icon: <Scale className="w-6 h-6 text-[var(--neu-accent)]" />,

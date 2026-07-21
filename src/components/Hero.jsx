@@ -12,7 +12,7 @@ export default function Hero() {
   ];
 
   return (
-    <section className="relative min-h-[80vh] flex flex-col items-center justify-center py-12 md:py-16 overflow-hidden bg-[var(--neu-base)] transition-colors duration-300">
+    <section className="relative min-h-[80vh] flex flex-col items-center justify-center pt-4 pb-12 md:pt-4 md:pb-16 overflow-hidden bg-[var(--neu-base)] transition-colors duration-300">
       {/* Warm Gold/Amber Glow Blobs using Theme Colors */}
       <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[550px] h-[550px] bg-[var(--neu-accent)]/10 blur-[130px] rounded-full pointer-events-none transition-colors duration-300" />
       <div className="absolute bottom-[10%] left-[5%] w-80 h-80 bg-[var(--neu-accent)]/5 blur-[100px] rounded-full pointer-events-none transition-colors duration-300" />

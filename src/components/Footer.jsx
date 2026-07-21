@@ -37,7 +37,7 @@ export default function Footer() {
                   href="#why-counseling"
                   className="transition-colors text-[var(--neu-text-muted)] hover:text-[var(--neu-accent)]"
                 >
-                  Why Counseling?
+                  Why Counselling?
                 </a>
               </li>
               <li>

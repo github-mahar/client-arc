@@ -19,7 +19,7 @@ export default function WhyCounseling() {
             ?
           </h2>
           <p className="text-lg text-[var(--neu-text-muted)] transition-colors duration-300">
-            &ldquo;Even the prophet Muhammad (ﷺ), The Greatest Mind ever, was commanded by Allah to seek Consultation. The Qur'an says: &ldquo;Washawirhum fil amr&rdquo; - meaning &ldquo;And consult them in the matter.&rdquo;&rdquo;
+            &ldquo;Even the prophet Muhammad (ﷺ), The Greatest Mind ever, was commanded by Allah to seek Consultation. The Qur'an says: &ldquo;Washawirhum fil amr&rdquo; - meaning &ldquo;And consult them in matters.&rdquo;&rdquo;
           </p>
         </motion.div>
 
@@ -47,7 +47,7 @@ export default function WhyCounseling() {
             <div className="text-left space-y-3">
               {/* [VERIFY WITH CLIENT] - English translation accuracy for Surah Aal-Imran 3:159 */}
               <p className="italic text-lg md:text-xl font-medium leading-relaxed text-[var(--neu-text)] transition-colors duration-300">
-                &ldquo;And Consult them in the matter.&rdquo;
+                &ldquo;And Consult them in matters.&rdquo;
               </p>
               <p className="text-xs font-bold uppercase tracking-wider text-[var(--neu-accent)] transition-colors duration-300">
                 — Surah Aal-Imran 3:159

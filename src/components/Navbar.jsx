@@ -23,7 +23,7 @@ export default function Navbar() {
   }, []);
 
   const links = [
-    { name: 'Why Counseling?', href: '#why-counseling' },
+    { name: 'Why Counselling?', href: '#why-counseling' },
     { name: 'Packages', href: '#packages' },
     { name: 'About Me', href: '#about-me' },
   ];
