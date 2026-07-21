@@ -55,9 +55,9 @@ export default function Packages() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--neu-text)] transition-colors duration-300">
-            Our{' '}
+            Where To{' '}
             <span className="font-display text-[var(--neu-accent)] tracking-wider transition-colors duration-300">
-              Packages
+              Start
             </span>
           </h2>
           <p className="text-lg max-w-2xl mx-auto text-[var(--neu-text-muted)] transition-colors duration-300">
@@ -71,11 +71,10 @@ export default function Packages() {
           {packages.map((pkg, index) => (
             <motion.div
               key={pkg.id}
-              className={`relative flex flex-col w-full md:w-[calc(50%-20px)] lg:w-[calc(33.333%-27px)] max-w-[380px] p-8 rounded-xl bg-[var(--neu-card-bg)] border ${
-                pkg.isPopular
+              className={`relative flex flex-col w-full md:w-[calc(50%-20px)] lg:w-[calc(33.333%-27px)] max-w-[380px] p-8 rounded-xl bg-[var(--neu-card-bg)] border ${pkg.isPopular
                   ? 'border-[var(--neu-accent)] shadow-[0_0_20px_rgba(184,121,31,0.08)] dark:shadow-[0_0_20px_rgba(240,168,56,0.15)]'
                   : 'border-[var(--neu-border)]'
-              } transition-all duration-300`}
+                } transition-all duration-300`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
@@ -109,9 +108,8 @@ export default function Packages() {
               <div className="mt-auto pt-6 border-t border-[var(--neu-border)] transition-colors duration-300">
                 <motion.button
                   whileTap={{ scale: 0.97 }}
-                  className={`w-full py-3 px-4 font-extrabold cursor-pointer transition-all duration-300 ${
-                    pkg.isPopular ? 'neu-btn-primary' : 'neu-btn'
-                  }`}
+                  className={`w-full py-3 px-4 font-extrabold cursor-pointer transition-all duration-300 ${pkg.isPopular ? 'neu-btn-primary' : 'neu-btn'
+                    }`}
                 >
                   Choose This Package
                 </motion.button>

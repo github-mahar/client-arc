@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=UnifrakturMaguntia&family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&family=Permanent+Marker&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Inter', sans-serif;
-  --font-serif: 'Playfair Display', serif;
-  --font-display: 'UnifrakturMaguntia', serif;
+  --font-sans: 'DM Sans', sans-serif;
+  --font-heading: 'El Messiri', sans-serif;
+  --font-display: 'El Messiri', sans-serif;
   --font-marker: 'Permanent Marker', cursive;
 }
 
@@ -47,11 +47,15 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   background-color: var(--neu-base);
   color: var(--neu-text);
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'El Messiri', sans-serif;
 }
 
 /* ============================================================

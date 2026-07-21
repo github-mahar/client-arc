@@ -27,7 +27,7 @@ export default function Hero() {
           transition={{ duration: 0.8 }}
         >
           <div className="inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider text-[var(--neu-accent)] bg-[var(--neu-accent)]/10 rounded-full border border-[var(--neu-border)] transition-colors duration-300">
-            Welcome
+            Welcome Here!
           </div>
 
           <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-[var(--neu-text)] transition-colors duration-300">

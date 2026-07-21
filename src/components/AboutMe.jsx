@@ -44,14 +44,14 @@ export default function AboutMe() {
               About Me
             </span>
             <h2 className="text-3xl md:text-5xl font-extrabold leading-tight text-[var(--neu-text)] transition-colors duration-300">
-              A Different Kind of{' '}
+              Why To Choose{' '}
               <span className="font-display text-[var(--neu-accent)] tracking-wider transition-colors duration-300">
-                Counseling
+                ARC
               </span>
             </h2>
             <div className="space-y-2">
               <h3 className="text-xl font-bold text-[var(--neu-text)] transition-colors duration-300">Abdul Rehman Cheema</h3>
-              <p className="text-base md:text-lg leading-relaxed text-[var(--neu-text-muted)] transition-colors duration-300">
+              <p className="text-base md:text-lg leading-relaxed text-[var(--neu-text-muted)] transition-colors duration-300 text-left md:text-center">
                 Islamic counselor blending Psychology, Neuroscience, and Shariah to provide practical guidance. By bridging the gap between empirical science and theological principles, I help couples and individuals navigate life's challenges, cultivate healthy relationships, and find spiritual and emotional well-being.
               </p>
             </div>

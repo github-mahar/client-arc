@@ -36,7 +36,7 @@ export default function Navbar() {
           {/* Logo */}
           <a href="#" className="flex items-center gap-2">
             <img src={logo} alt="ARC Logo" className="h-8 w-auto" />
-            <span className="text-2xl font-bold tracking-tight transition-colors hidden sm:block" style={{ color: 'var(--neu-accent)' }}>
+            <span className="text-2xl font-bold tracking-tight transition-colors" style={{ color: 'var(--neu-accent)' }}>
               ARC
             </span>
           </a>
