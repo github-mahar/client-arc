@@ -39,7 +39,7 @@ export default function WhyCounseling() {
             {/* Arabic Text block */}
             <div className="text-right mb-6">
               {/* [VERIFY WITH CLIENT] - Arabic text accuracy and rendering for Surah Aal-Imran 3:159 */}
-              <p className="font-serif text-3xl md:text-4xl leading-loose text-[var(--neu-text)] font-semibold transition-colors duration-300" dir="rtl">
+              <p className="font-arabic text-3xl md:text-4xl leading-loose text-[var(--neu-text)] font-semibold transition-colors duration-300" dir="rtl">
                 وَشَاوِرْهُمْ فِي الْأَمْرِ
               </p>
             </div>
