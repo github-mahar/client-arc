@@ -10,7 +10,7 @@ const PACKAGES = [
     id: '60min',
     name: '60 Minute Session',
     description: 'A focused, one-on-one session to address immediate concerns and find actionable coping strategies.',
-    price: 'PKR 5,000',
+    price: 'PKR 10,000',
     duration: '1 Session / 60 Mins',
     isPopular: false,
   },
@@ -18,7 +18,7 @@ const PACKAGES = [
     id: '3sessions',
     name: '3 Sessions Package',
     description: 'Deep-dive counselling to unpack emotional blocks, establish therapeutic goals, and build resilience.',
-    price: 'PKR 13,500',
+    price: 'PKR 25,000',
     duration: '3 Sessions',
     isPopular: true,
   },
@@ -26,7 +26,7 @@ const PACKAGES = [
     id: 'urgent',
     name: 'Urgent Session',
     description: 'Priority booking within 24 hours for acute distress, critical life events, or sudden relationship issues.',
-    price: 'PKR 8,000',
+    price: 'PKR 14,500',
     duration: '1 Session / Priority',
     isPopular: false,
   },
@@ -34,7 +34,7 @@ const PACKAGES = [
     id: '5sessions',
     name: '5 Sessions Package',
     description: 'Comprehensive therapy plan exploring core behaviors, relationship dynamics, and lasting solutions.',
-    price: 'PKR 20,000',
+    price: 'PKR 45,000',
     duration: '5 Sessions',
     isPopular: false,
   },
@@ -42,7 +42,7 @@ const PACKAGES = [
     id: 'physical',
     name: 'Physical Meeting',
     description: 'In-person premium consultation at our office, providing a safe, direct, and collaborative healing environment.',
-    price: 'PKR 20,000',
+    price: 'PKR 25,000',
     duration: '1 In-Person Session',
     isPopular: false,
     recommended: true,
@@ -186,12 +186,20 @@ export default function BookingPage() {
       if (paymentMethod === 'bank') {
         const fileName = `${Date.now()}-${screenshot.name}`;
 
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('payment-receipts')
-          .upload(fileName, screenshot);
+        let uploadData, uploadError;
+        try {
+          ({ data: uploadData, error: uploadError } = await supabase.storage
+            .from('payment-receipts')
+            .upload(fileName, screenshot));
+        } catch (fetchErr) {
+          throw new Error(
+            'Receipt upload failed: Could not reach storage server. ' +
+            'Please ensure the payment-receipts bucket exists in your Supabase project, then try again. ' +
+            `(${fetchErr.message})`
+          );
+        }
 
         // Guard against both explicit errors and silent failures.
-        // Supabase returns a real `id` (UUID) only when the object is actually written.
         if (uploadError) {
           throw new Error(`Receipt upload failed: ${uploadError.message}`);
         }
