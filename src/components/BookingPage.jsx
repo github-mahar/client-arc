@@ -671,19 +671,15 @@ export default function BookingPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-[var(--neu-border)] pb-4 text-xs">
                       <div>
                         <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Title</span>
-                        <strong className="text-[var(--neu-text)] text-sm">Abdul Rehman Cheema</strong>
+                        <strong className="text-[var(--neu-text)] text-sm">Abdul Rehman</strong>
                       </div>
                       <div>
                         <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Bank Name</span>
-                        <strong className="text-[var(--neu-text)] text-sm">Meezan Bank Limited</strong>
+                        <strong className="text-[var(--neu-text)] text-sm">United Bank Limited (UBL)</strong>
                       </div>
-                      <div>
-                        <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Number</span>
-                        <strong className="text-[var(--neu-text)] text-sm">0234 5678 9012 34</strong>
-                      </div>
-                      <div>
+                      <div className="sm:col-span-2">
                         <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">IBAN</span>
-                        <strong className="text-[var(--neu-text)] text-sm">PK45 MEZN 0002 3456 7890 1234</strong>
+                        <strong className="text-[var(--neu-text)] text-sm tracking-widest">PK08 UNIL 0109 0003 0993 8925</strong>
                       </div>
                     </div>
 
