@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../ThemeContext';
@@ -8,6 +9,8 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,18 +31,40 @@ export default function Navbar() {
     { name: 'About Me', href: '#about-me' },
   ];
 
+  const handleNavLinkClick = (e, href) => {
+    e.preventDefault();
+    setIsOpen(false);
+    if (location.pathname === '/') {
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      navigate('/', { state: { scrollToHash: href } });
+    }
+  };
+
   return (
     <>
       <nav className={`glass-nav ${isScrolled ? 'glass-nav-active' : ''} fixed top-0 left-0 right-0 z-50 transition-all duration-300`}>
         <div className="container mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
 
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              if (location.pathname === '/') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              } else {
+                navigate('/');
+              }
+            }}
+            className="flex items-center gap-2 bg-transparent border-none cursor-pointer"
+          >
             <img src={logo} alt="ARC Logo" className="h-8 w-auto" />
             <span className="text-2xl font-bold tracking-tight transition-colors" style={{ color: 'var(--neu-accent)' }}>
               ARC
             </span>
-          </a>
+          </button>
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-8">
@@ -48,6 +73,7 @@ export default function Navbar() {
                 <li key={link.name}>
                   <a
                     href={link.href}
+                    onClick={(e) => handleNavLinkClick(e, link.href)}
                     className="text-sm font-medium transition-colors"
                     style={{ color: 'var(--neu-text-muted)' }}
                     onMouseEnter={e => e.target.style.color = 'var(--neu-accent)'}
@@ -74,7 +100,8 @@ export default function Navbar() {
 
               <motion.button
                 whileTap={{ scale: 0.97 }}
-                className="glass-btn-primary px-5 py-2.5 text-sm cursor-pointer font-bold"
+                onClick={() => navigate('/booking')}
+                className="glass-btn-primary px-5 py-2.5 text-sm cursor-pointer font-bold border-none"
               >
                 Book Session
               </motion.button>
@@ -121,14 +148,17 @@ export default function Navbar() {
                   key={link.name}
                   href={link.href}
                   className="font-medium py-2 border-b border-stone-300 dark:border-stone-850 hover:text-[var(--neu-accent)] transition-colors text-stone-800 dark:text-stone-200"
-                  onClick={() => setIsOpen(false)}
+                  onClick={(e) => handleNavLinkClick(e, link.href)}
                 >
                   {link.name}
                 </a>
               ))}
               <button
-                className="glass-btn-primary w-full py-3 text-sm mt-2 cursor-pointer font-bold"
-                onClick={() => setIsOpen(false)}
+                className="glass-btn-primary w-full py-3 text-sm mt-2 cursor-pointer font-bold border-none"
+                onClick={() => {
+                  setIsOpen(false);
+                  navigate('/booking');
+                }}
               >
                 Book Session
               </button>

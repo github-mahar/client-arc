@@ -21,11 +21,11 @@ export default function AboutMe() {
   ];
 
   const useCases = [
-    'Self-development',
-    'Relationships',
-    'Career decisions',
-    'Marital challenges',
-    'Spiritual well-being'
+    'Self-Development',
+    'Relationships Issues',
+    'Career Decisions',
+    'Marital Challenges',
+    'Spiritual Well-Being'
   ];
 
   return (

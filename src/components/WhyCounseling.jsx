@@ -18,7 +18,7 @@ export default function WhyCounseling() {
             </span>
             ?
           </h2>
-          <p className="text-lg text-[var(--neu-text-muted)] transition-colors duration-300">
+          <p className="text-lg text-[var(--neu-text-muted)] transition-colors duration-300 text-left md:text-center">
             &ldquo;Even the prophet Muhammad (ﷺ), The Greatest Mind ever, was commanded by Allah to seek Consultation. The Qur'an says: &ldquo;Washawirhum fil amr&rdquo; - meaning &ldquo;And consult them in matters.&rdquo;&rdquo;
           </p>
         </motion.div>

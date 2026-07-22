@@ -1,11 +1,12 @@
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const packages = [
   {
     id: '60min',
     name: '60 Minute Session',
     description: 'A focused, one-on-one session to address immediate concerns and find actionable coping strategies.',
-    price: 'PKR 5,000',
+    price: 'PKR 10,000',
     duration: '1 Session / 60 Mins',
     isPopular: false,
   },
@@ -13,7 +14,7 @@ const packages = [
     id: '3sessions',
     name: '3 Sessions Package',
     description: 'Deep-dive counselling to unpack emotional blocks, establish therapeutic goals, and build resilience.',
-    price: 'PKR 13,500',
+    price: 'PKR 25,000',
     duration: '3 Sessions',
     isPopular: true,
   },
@@ -21,7 +22,7 @@ const packages = [
     id: 'urgent',
     name: 'Urgent Session',
     description: 'Priority booking within 24 hours for acute distress, critical life events, or sudden relationship issues.',
-    price: 'PKR 8,000',
+    price: 'PKR 14,500',
     duration: '1 Session / Priority',
     isPopular: false,
   },
@@ -29,7 +30,7 @@ const packages = [
     id: '5sessions',
     name: '5 Sessions Package',
     description: 'Comprehensive therapy plan exploring core behaviors, relationship dynamics, and lasting solutions.',
-    price: 'PKR 20,000',
+    price: 'PKR 45,000',
     duration: '5 Sessions',
     isPopular: false,
   },
@@ -37,7 +38,7 @@ const packages = [
     id: 'physical',
     name: 'Physical Meeting',
     description: 'In-person premium consultation at our office, providing a safe, direct, and collaborative healing environment.',
-    price: 'PKR 20,000',
+    price: 'PKR 25,000',
     duration: '1 In-Person Session',
     isPopular: false,
     recommended: true,
@@ -45,6 +46,7 @@ const packages = [
 ];
 
 export default function Packages() {
+  const navigate = useNavigate();
   return (
     <section id="packages" className="py-16 bg-[var(--neu-base)] transition-colors duration-300">
       <div className="container mx-auto px-6 md:px-12">
@@ -116,7 +118,8 @@ export default function Packages() {
               <div className="mt-auto pt-6 border-t border-[var(--neu-border)] transition-colors duration-300">
                 <motion.button
                   whileTap={{ scale: 0.97 }}
-                  className={`w-full py-3 px-4 font-extrabold cursor-pointer transition-all duration-300 ${pkg.isPopular || pkg.recommended ? 'neu-btn-primary' : 'neu-btn'
+                  onClick={() => navigate('/booking', { state: { selectedPackageId: pkg.id } })}
+                  className={`w-full py-3 px-4 font-extrabold cursor-pointer transition-all duration-300 border-none ${pkg.isPopular || pkg.recommended ? 'neu-btn-primary' : 'neu-btn'
                     }`}
                 >
                   Choose This Package

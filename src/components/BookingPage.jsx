@@ -1,0 +1,778 @@
+import { useState, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Calendar, Clock, User, Mail, Phone, CreditCard, Landmark, Upload, CheckCircle, ArrowLeft, AlertCircle } from 'lucide-react';
+import Navbar from './Navbar';
+import { supabase } from '../lib/supabaseClient';
+
+const PACKAGES = [
+  {
+    id: '60min',
+    name: '60 Minute Session',
+    description: 'A focused, one-on-one session to address immediate concerns and find actionable coping strategies.',
+    price: 'PKR 5,000',
+    duration: '1 Session / 60 Mins',
+    isPopular: false,
+  },
+  {
+    id: '3sessions',
+    name: '3 Sessions Package',
+    description: 'Deep-dive counselling to unpack emotional blocks, establish therapeutic goals, and build resilience.',
+    price: 'PKR 13,500',
+    duration: '3 Sessions',
+    isPopular: true,
+  },
+  {
+    id: 'urgent',
+    name: 'Urgent Session',
+    description: 'Priority booking within 24 hours for acute distress, critical life events, or sudden relationship issues.',
+    price: 'PKR 8,000',
+    duration: '1 Session / Priority',
+    isPopular: false,
+  },
+  {
+    id: '5sessions',
+    name: '5 Sessions Package',
+    description: 'Comprehensive therapy plan exploring core behaviors, relationship dynamics, and lasting solutions.',
+    price: 'PKR 20,000',
+    duration: '5 Sessions',
+    isPopular: false,
+  },
+  {
+    id: 'physical',
+    name: 'Physical Meeting',
+    description: 'In-person premium consultation at our office, providing a safe, direct, and collaborative healing environment.',
+    price: 'PKR 20,000',
+    duration: '1 In-Person Session',
+    isPopular: false,
+    recommended: true,
+  },
+];
+
+const TIME_SLOTS = [
+  { id: 'morning', label: 'Morning', time: '9:00 AM - 12:00 PM' },
+  { id: 'afternoon', label: 'Afternoon', time: '12:00 PM - 5:00 PM' },
+  { id: 'evening', label: 'Evening', time: '5:00 PM - 9:00 PM' },
+];
+
+export default function BookingPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const formRef = useRef(null);
+
+  // Get pre-selected package ID from navigation state
+  const initialPackageId = location.state?.selectedPackageId || '';
+  
+  // Form states
+  const [selectedPackage, setSelectedPackage] = useState(null);
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [preferredDate, setPreferredDate] = useState('');
+  const [preferredTimeSlot, setPreferredTimeSlot] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('safepay'); // safepay or bank
+  const [screenshot, setScreenshot] = useState(null);
+  const [screenshotPreview, setScreenshotPreview] = useState('');
+  
+  // Validation and UI states
+  const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submittedData, setSubmittedData] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  // Set package selection if navigating with state
+  useEffect(() => {
+    if (initialPackageId) {
+      const found = PACKAGES.find(p => p.id === initialPackageId);
+      if (found) {
+        setSelectedPackage(found);
+      }
+    }
+  }, [initialPackageId]);
+
+  // Handle file upload
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        setErrors(prev => ({ ...prev, screenshot: 'Please upload an image file only.' }));
+        return;
+      }
+      setScreenshot(file);
+      setErrors(prev => {
+        const copy = { ...prev };
+        delete copy.screenshot;
+        return copy;
+      });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setScreenshotPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Scroll to Form section helper
+  const scrollToForm = () => {
+    formRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Validate form
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!selectedPackage) {
+      newErrors.package = 'Please select a package first.';
+    }
+
+    if (!fullName.trim()) {
+      newErrors.fullName = 'Full Name is required.';
+    }
+
+    if (!email.trim() && !phone.trim()) {
+      newErrors.contact = 'Either Email or Phone must be provided.';
+    } else {
+      if (email.trim() && !/\S+@\S+\.\S+/.test(email)) {
+        newErrors.email = 'Please enter a valid email address.';
+      }
+      if (phone.trim() && !/^\+?[0-9\s-]{7,15}$/.test(phone)) {
+        newErrors.phone = 'Please enter a valid phone number.';
+      }
+    }
+
+    if (!preferredDate) {
+      newErrors.preferredDate = 'Please select a preferred date.';
+    } else {
+      const selectedDate = new Date(preferredDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (selectedDate < today) {
+        newErrors.preferredDate = 'Date cannot be in the past.';
+      }
+    }
+
+    if (!preferredTimeSlot) {
+      newErrors.preferredTimeSlot = 'Please select a preferred time slot.';
+    }
+
+    if (paymentMethod === 'bank' && !screenshot) {
+      newErrors.screenshot = 'Please upload a bank transfer receipt screenshot.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Handle Form Submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) {
+      // Scroll to first error
+      const firstError = Object.keys(errors)[0];
+      if (firstError) {
+        scrollToForm();
+      }
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError('');
+
+    try {
+      let receiptPath = null;
+
+      // 1. Handle file upload if paying via bank transfer
+      if (paymentMethod === 'bank') {
+        const fileName = `${Date.now()}-${screenshot.name}`;
+
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('payment-receipts')
+          .upload(fileName, screenshot);
+
+        // Guard against both explicit errors and silent failures.
+        // Supabase returns a real `id` (UUID) only when the object is actually written.
+        if (uploadError) {
+          throw new Error(`Receipt upload failed: ${uploadError.message}`);
+        }
+        if (!uploadData?.id || !uploadData?.path) {
+          throw new Error('Receipt upload failed: server did not confirm the file was saved. Please try again.');
+        }
+
+        receiptPath = uploadData.path;
+      }
+
+
+      // 2. Prepare the payload for bookings insert
+      const bookingPayload = {
+        package_id: selectedPackage.id,
+        package_name: selectedPackage.name,
+        price: selectedPackage.price,
+        full_name: fullName,
+        email: email || null,
+        phone: phone || null,
+        preferred_date: preferredDate,
+        preferred_time_slot: preferredTimeSlot,
+        payment_method: paymentMethod === 'bank' ? 'bank_transfer' : 'safepay',
+        payment_status: 'pending', // Public client must always send 'pending'
+        receipt_path: receiptPath || null,
+        safepay_reference: null
+      };
+
+      // 3. Insert into public.bookings (no .select() — anon has INSERT-only privilege)
+      const { error: insertError } = await supabase
+        .from('bookings')
+        .insert([bookingPayload]);
+
+      if (insertError) {
+        throw new Error(`Booking submission failed: ${insertError.message}`);
+      }
+
+      // LOG THE PAYLOAD TO CONSOLE
+      console.log('--- ARC BOOKING SUBMISSION PAYLOAD ---');
+      console.log(JSON.stringify(bookingPayload, null, 2));
+      console.log('--------------------------------------');
+
+      // TODO: Wire up actual Safepay redirect here
+      if (paymentMethod === 'safepay') {
+        // TODO: window.location.href = safepayCheckoutUrl
+      }
+
+      // Build display data from local form state (no server row read-back)
+      setSubmittedData({
+        packageName: selectedPackage.name,
+        fullName,
+        preferredDate,
+        preferredTimeSlot,
+        paymentMethod,
+      });
+      setIsSubmitted(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      console.error('Supabase booking error:', err);
+      setSubmitError(err.message || 'An unexpected error occurred. Please try again.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen pt-24 pb-20 bg-[var(--neu-base)] text-[var(--neu-text)] transition-colors duration-300">
+      <Navbar />
+      <div className="container mx-auto px-6 md:px-12 max-w-5xl">
+        {/* Back Button */}
+        <button
+          onClick={() => navigate('/')}
+          className="inline-flex items-center gap-2 mb-8 text-sm font-semibold transition-colors duration-300 text-[var(--neu-text-muted)] hover:text-[var(--neu-accent)] cursor-pointer bg-transparent border-none"
+        >
+          <ArrowLeft className="w-4 h-4" /> Back to Home
+        </button>
+
+        {isSubmitted ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="max-w-xl mx-auto text-center py-16 px-8 rounded-2xl bg-[var(--neu-card-bg)] border border-[var(--neu-accent)] shadow-[0_0_30px_rgba(240,168,56,0.15)]"
+          >
+            <CheckCircle className="w-16 h-16 mx-auto mb-6 text-[var(--neu-accent)]" />
+            <h2 className="text-3xl font-bold mb-4 font-heading text-[var(--neu-text)]">
+              Booking Request Received!
+            </h2>
+            <p className="text-[var(--neu-text-muted)] leading-relaxed mb-6">
+              Thank you, <span className="font-bold text-[var(--neu-text)]">{submittedData?.fullName}</span>. 
+              We have logged your request for the <span className="font-semibold text-[var(--neu-accent)]">{submittedData?.packageName}</span>.
+              We'll review your preferred slot ({submittedData?.preferredDate} - {submittedData?.preferredTimeSlot}) and confirm shortly.
+            </p>
+            {submittedData?.paymentMethod === 'bank' ? (
+              <div className="p-4 rounded-xl mb-6 bg-amber-500/10 border border-amber-500/20 text-xs text-[var(--neu-text-muted)] text-left">
+                <strong>Bank Transfer Verification Pending:</strong> Since you paid via Bank Transfer, our team will review the uploaded receipt. Your session status is marked as <strong>Pending Verification</strong>.
+              </div>
+            ) : (
+              <div className="p-4 rounded-xl mb-6 bg-green-500/10 border border-green-500/20 text-xs text-[var(--neu-text-muted)] text-left">
+                <strong>Safepay Gateway:</strong> Redirect simulation complete. Transaction verified successfully.
+              </div>
+            )}
+            <button
+              onClick={() => navigate('/')}
+              className="neu-btn px-6 py-2.5 text-sm cursor-pointer"
+            >
+              Return Home
+            </button>
+          </motion.div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-12">
+            
+            {/* Header */}
+            <div className="text-center space-y-4">
+              <h1 className="text-4xl md:text-6xl font-extrabold text-[var(--neu-text)]">
+                Book Your{' '}
+                <span className="font-display text-[var(--neu-accent)] tracking-wider">
+                  Session
+                </span>
+              </h1>
+              <p className="text-[var(--neu-text-muted)] max-w-xl mx-auto">
+                Follow our secure three-step process to reserve your therapy slot.
+              </p>
+            </div>
+
+            {/* Supabase Error Banner */}
+            {submitError && (
+              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-sm text-[var(--neu-text)] flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-[var(--neu-accent)] flex-shrink-0 mt-0.5" />
+                <div>
+                  <strong className="font-bold text-[var(--neu-accent)]">Submission Error:</strong>
+                  <p className="text-xs text-[var(--neu-text-muted)] mt-1">{submitError}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Error Banner */}
+            {Object.keys(errors).length > 0 && (
+              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-sm text-[var(--neu-text)] flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-[var(--neu-accent)] flex-shrink-0 mt-0.5" />
+                <div>
+                  <strong className="font-bold text-[var(--neu-accent)]">Please correct the following errors:</strong>
+                  <ul className="list-disc pl-5 mt-1 space-y-1 text-xs text-[var(--neu-text-muted)]">
+                    {Object.values(errors).map((err, idx) => (
+                      <li key={idx}>{err}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 1: PACKAGE SELECTION */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 border-b border-[var(--neu-border)] pb-3">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs bg-[var(--neu-accent)] text-[var(--neu-base)]">1</span>
+                <h2 className="text-xl font-bold tracking-wide">Select Your Counselling Package</h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {PACKAGES.map((pkg) => {
+                  const isSelected = selectedPackage?.id === pkg.id;
+                  return (
+                    <div
+                      key={pkg.id}
+                      onClick={() => {
+                        setSelectedPackage(pkg);
+                        setErrors(prev => {
+                          const copy = { ...prev };
+                          delete copy.package;
+                          return copy;
+                        });
+                      }}
+                      className={`relative flex flex-col p-6 rounded-xl bg-[var(--neu-card-bg)] border transition-all duration-300 cursor-pointer ${
+                        isSelected
+                          ? 'border-[var(--neu-border-solid)] shadow-[0_0_20px_rgba(184,121,31,0.2)] dark:shadow-[0_0_20px_rgba(240,168,56,0.25)] scale-[1.02]'
+                          : 'border-[var(--neu-border)] opacity-85 hover:opacity-100 hover:border-[var(--neu-accent)]'
+                      }`}
+                    >
+                      {/* Select indicator */}
+                      <div className={`absolute top-4 right-4 w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
+                        isSelected ? 'bg-[var(--neu-accent)] border-[var(--neu-accent)]' : 'border-stone-400 dark:border-stone-600'
+                      }`}>
+                        {isSelected && <div className="w-2 h-2 rounded-full bg-[var(--neu-base)]" />}
+                      </div>
+
+                      {pkg.isPopular && (
+                        <span className="w-max text-[0.65rem] font-bold tracking-widest uppercase px-2 py-0.5 rounded bg-[var(--neu-accent)] text-[var(--neu-base)] mb-3">
+                          Popular
+                        </span>
+                      )}
+                      {pkg.recommended && (
+                        <span className="w-max text-[0.65rem] font-bold tracking-widest uppercase px-2 py-0.5 rounded bg-[var(--neu-accent)] text-[var(--neu-base)] mb-3">
+                          Recommended
+                        </span>
+                      )}
+
+                      <h3 className="text-lg font-bold mb-1 pr-6">{pkg.name}</h3>
+                      <p className="text-xs text-[var(--neu-text-muted)] line-clamp-3 mb-4 leading-relaxed">{pkg.description}</p>
+                      
+                      <div className="mt-auto pt-4 border-t border-[var(--neu-border)] flex justify-between items-baseline">
+                        <span className="text-xs font-bold text-[var(--neu-accent)]">{pkg.duration}</span>
+                        <span className="text-xl font-extrabold">{pkg.price}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* STEP 2: CLIENT DETAILS */}
+            <div ref={formRef} className="space-y-6 pt-6">
+              <div className="flex items-center gap-3 border-b border-[var(--neu-border)] pb-3">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs bg-[var(--neu-accent)] text-[var(--neu-base)]">2</span>
+                <h2 className="text-xl font-bold tracking-wide">Your Details & Preferences</h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Full Name */}
+                <div className="space-y-2">
+                  <label htmlFor="fullName" className="text-xs font-bold uppercase tracking-wider text-[var(--neu-text-muted)] flex items-center gap-1.5">
+                    <User className="w-3.5 h-3.5 text-[var(--neu-accent)]" /> Full Name <span className="text-[var(--neu-accent)]">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    value={fullName}
+                    onChange={(e) => {
+                      setFullName(e.target.value);
+                      if (e.target.value.trim()) {
+                        setErrors(prev => {
+                          const copy = { ...prev };
+                          delete copy.fullName;
+                          return copy;
+                        });
+                      }
+                    }}
+                    placeholder="e.g. Haris Mahar"
+                    className="w-full px-4 py-3 rounded-lg bg-[var(--neu-card-bg)] border border-[var(--neu-border)] text-sm text-[var(--neu-text)] focus:outline-none focus:border-[var(--neu-border-solid)] focus:ring-1 focus:ring-[var(--neu-accent)] transition-all"
+                  />
+                  {errors.fullName && (
+                    <p className="text-xs text-amber-500/90 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" /> {errors.fullName}
+                    </p>
+                  )}
+                </div>
+
+                {/* Preferred Date */}
+                <div className="space-y-2">
+                  <label htmlFor="preferredDate" className="text-xs font-bold uppercase tracking-wider text-[var(--neu-text-muted)] flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-[var(--neu-accent)]" /> Preferred Date <span className="text-[var(--neu-accent)]">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    id="preferredDate"
+                    value={preferredDate}
+                    onChange={(e) => {
+                      setPreferredDate(e.target.value);
+                      if (e.target.value) {
+                        setErrors(prev => {
+                          const copy = { ...prev };
+                          delete copy.preferredDate;
+                          return copy;
+                        });
+                      }
+                    }}
+                    className="w-full px-4 py-3 rounded-lg bg-[var(--neu-card-bg)] border border-[var(--neu-border)] text-sm text-[var(--neu-text)] focus:outline-none focus:border-[var(--neu-border-solid)] focus:ring-1 focus:ring-[var(--neu-accent)] transition-all"
+                  />
+                  {errors.preferredDate && (
+                    <p className="text-xs text-amber-500/90 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" /> {errors.preferredDate}
+                    </p>
+                  )}
+                </div>
+
+                {/* Email Address */}
+                <div className="space-y-2">
+                  <label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-[var(--neu-text-muted)] flex items-center gap-1.5">
+                    <Mail className="w-3.5 h-3.5 text-[var(--neu-accent)]" /> Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (e.target.value || phone) {
+                        setErrors(prev => {
+                          const copy = { ...prev };
+                          delete copy.contact;
+                          delete copy.email;
+                          return copy;
+                        });
+                      }
+                    }}
+                    placeholder="e.g. haris@example.com"
+                    className="w-full px-4 py-3 rounded-lg bg-[var(--neu-card-bg)] border border-[var(--neu-border)] text-sm text-[var(--neu-text)] focus:outline-none focus:border-[var(--neu-border-solid)] focus:ring-1 focus:ring-[var(--neu-accent)] transition-all"
+                  />
+                  {errors.email && (
+                    <p className="text-xs text-amber-500/90 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" /> {errors.email}
+                    </p>
+                  )}
+                </div>
+
+                {/* Phone Number */}
+                <div className="space-y-2">
+                  <label htmlFor="phone" className="text-xs font-bold uppercase tracking-wider text-[var(--neu-text-muted)] flex items-center gap-1.5">
+                    <Phone className="w-3.5 h-3.5 text-[var(--neu-accent)]" /> Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    value={phone}
+                    onChange={(e) => {
+                      setPhone(e.target.value);
+                      if (e.target.value || email) {
+                        setErrors(prev => {
+                          const copy = { ...prev };
+                          delete copy.contact;
+                          delete copy.phone;
+                          return copy;
+                        });
+                      }
+                    }}
+                    placeholder="e.g. +92 300 1234567"
+                    className="w-full px-4 py-3 rounded-lg bg-[var(--neu-card-bg)] border border-[var(--neu-border)] text-sm text-[var(--neu-text)] focus:outline-none focus:border-[var(--neu-border-solid)] focus:ring-1 focus:ring-[var(--neu-accent)] transition-all"
+                  />
+                  {errors.phone && (
+                    <p className="text-xs text-amber-500/90 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" /> {errors.phone}
+                    </p>
+                  )}
+                </div>
+
+                {/* Contact helper message */}
+                <div className="md:col-span-2">
+                  {errors.contact && (
+                    <p className="text-xs text-amber-500/90 flex items-center gap-1 bg-amber-500/10 p-3 rounded-lg border border-amber-500/20">
+                      <AlertCircle className="w-4 h-4 flex-shrink-0 text-[var(--neu-accent)]" /> {errors.contact}
+                    </p>
+                  )}
+                  {!errors.contact && (
+                    <p className="text-[10px] text-[var(--neu-text-faint)] mt-1">
+                      Note: You must provide at least one contact method (Email or Phone) so we can send details.
+                    </p>
+                  )}
+                </div>
+
+                {/* Time Slots */}
+                <div className="md:col-span-2 space-y-3">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[var(--neu-text-muted)] flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-[var(--neu-accent)]" /> Preferred Time Slot <span className="text-[var(--neu-accent)]">*</span>
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {TIME_SLOTS.map((slot) => {
+                      const isSelected = preferredTimeSlot === slot.id;
+                      return (
+                        <button
+                          key={slot.id}
+                          type="button"
+                          onClick={() => {
+                            setPreferredTimeSlot(slot.id);
+                            setErrors(prev => {
+                              const copy = { ...prev };
+                              delete copy.preferredTimeSlot;
+                              return copy;
+                            });
+                          }}
+                          className={`flex flex-col items-center justify-center p-4 rounded-xl border text-center transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-[var(--neu-accent)] border-[var(--neu-accent)] text-[var(--neu-base)] shadow-[0_4px_12px_rgba(184,121,31,0.2)]'
+                              : 'bg-[var(--neu-card-bg)] border-[var(--neu-border)] text-[var(--neu-text)] hover:border-[var(--neu-accent)]'
+                          }`}
+                        >
+                          <span className="text-sm font-bold">{slot.label}</span>
+                          <span className={`text-[10px] mt-1 ${isSelected ? 'text-[var(--neu-base)] opacity-80' : 'text-[var(--neu-text-muted)]'}`}>
+                            {slot.time}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {errors.preferredTimeSlot && (
+                    <p className="text-xs text-amber-500/90 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" /> {errors.preferredTimeSlot}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* STEP 3: PAYMENT METHOD */}
+            <div className="space-y-6 pt-6">
+              <div className="flex items-center gap-3 border-b border-[var(--neu-border)] pb-3">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs bg-[var(--neu-accent)] text-[var(--neu-base)]">3</span>
+                <h2 className="text-xl font-bold tracking-wide">Choose Payment Method</h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Safepay selection card */}
+                <div
+                  onClick={() => setPaymentMethod('safepay')}
+                  className={`flex items-center gap-4 p-5 rounded-xl border cursor-pointer transition-all ${
+                    paymentMethod === 'safepay'
+                      ? 'border-[var(--neu-border-solid)] bg-[var(--neu-card-bg)] shadow-[0_0_15px_rgba(240,168,56,0.1)]'
+                      : 'border-[var(--neu-border)] opacity-80 hover:opacity-100 hover:border-[var(--neu-accent)]'
+                  }`}
+                >
+                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 ${
+                    paymentMethod === 'safepay' ? 'bg-[var(--neu-accent)] border-[var(--neu-accent)]' : 'border-stone-400 dark:border-stone-600'
+                  }`}>
+                    {paymentMethod === 'safepay' && <div className="w-2 h-2 rounded-full bg-[var(--neu-base)]" />}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-sm font-bold flex items-center gap-2">
+                      <CreditCard className="w-4 h-4 text-[var(--neu-accent)]" /> Pay online via Safepay
+                    </h3>
+                    <p className="text-[10px] text-[var(--neu-text-faint)] mt-1">Visa, Mastercard, Alfa, EasyPaisa, JazzCash</p>
+                  </div>
+                </div>
+
+                {/* Bank Transfer selection card */}
+                <div
+                  onClick={() => setPaymentMethod('bank')}
+                  className={`flex items-center gap-4 p-5 rounded-xl border cursor-pointer transition-all ${
+                    paymentMethod === 'bank'
+                      ? 'border-[var(--neu-border-solid)] bg-[var(--neu-card-bg)] shadow-[0_0_15px_rgba(240,168,56,0.1)]'
+                      : 'border-[var(--neu-border)] opacity-80 hover:opacity-100 hover:border-[var(--neu-accent)]'
+                  }`}
+                >
+                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 ${
+                    paymentMethod === 'bank' ? 'bg-[var(--neu-accent)] border-[var(--neu-accent)]' : 'border-stone-400 dark:border-stone-600'
+                  }`}>
+                    {paymentMethod === 'bank' && <div className="w-2 h-2 rounded-full bg-[var(--neu-base)]" />}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-sm font-bold flex items-center gap-2">
+                      <Landmark className="w-4 h-4 text-[var(--neu-accent)]" /> Bank Transfer
+                    </h3>
+                    <p className="text-[10px] text-[var(--neu-text-faint)] mt-1">Transfer directly to our bank account</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Dynamic Payment details container */}
+              <AnimatePresence mode="wait">
+                {paymentMethod === 'safepay' ? (
+                  <motion.div
+                    key="safepay"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="p-5 rounded-xl bg-[var(--neu-card-bg)] border border-[var(--neu-border)]"
+                  >
+                    <p className="text-xs text-[var(--neu-text-muted)] leading-relaxed">
+                      💡 <strong>Note:</strong> On clicking confirm, you will be redirected to Safepay's secure checkout page to complete your digital transaction.
+                    </p>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="bank"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="space-y-6 p-5 rounded-xl bg-[var(--neu-card-bg)] border border-[var(--neu-border)]"
+                  >
+                    {/* Bank Details Display */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-[var(--neu-border)] pb-4 text-xs">
+                      <div>
+                        <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Title</span>
+                        <strong className="text-[var(--neu-text)] text-sm">Abdul Rehman Cheema</strong>
+                      </div>
+                      <div>
+                        <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Bank Name</span>
+                        <strong className="text-[var(--neu-text)] text-sm">Meezan Bank Limited</strong>
+                      </div>
+                      <div>
+                        <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Number</span>
+                        <strong className="text-[var(--neu-text)] text-sm">0234 5678 9012 34</strong>
+                      </div>
+                      <div>
+                        <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">IBAN</span>
+                        <strong className="text-[var(--neu-text)] text-sm">PK45 MEZN 0002 3456 7890 1234</strong>
+                      </div>
+                    </div>
+
+                    {/* Screenshot File Upload */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-[var(--neu-text-muted)] block">
+                        Upload Receipt Screenshot <span className="text-[var(--neu-accent)]">*</span>
+                      </label>
+                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                        <label className="flex items-center justify-center gap-2 px-5 py-3 rounded-lg border border-dashed border-[var(--neu-accent)] hover:bg-[var(--neu-accent)]/5 cursor-pointer text-sm transition-all text-[var(--neu-accent)] bg-transparent">
+                          <Upload className="w-4 h-4" />
+                          <span>Choose Receipt Image</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            className="hidden"
+                          />
+                        </label>
+
+                        {/* Screenshot Thumbnail Preview */}
+                        {screenshotPreview && (
+                          <div className="flex items-center gap-3 p-2 rounded-lg bg-[var(--neu-base)] border border-[var(--neu-border)]">
+                            <img
+                              src={screenshotPreview}
+                              alt="Receipt Preview"
+                              className="w-12 h-12 object-cover rounded-md border border-[var(--neu-border)]"
+                            />
+                            <div className="text-left">
+                              <span className="text-xs font-semibold block text-[var(--neu-text)] max-w-[160px] truncate">{screenshot?.name}</span>
+                              <span className="text-[10px] text-[var(--neu-text-faint)] block">{(screenshot?.size / 1024).toFixed(1)} KB</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      {errors.screenshot && (
+                        <p className="text-xs text-amber-500/90 flex items-center gap-1 mt-1">
+                          <AlertCircle className="w-3 h-3" /> {errors.screenshot}
+                        </p>
+                      )}
+                      <p className="text-[9px] text-[var(--neu-text-faint)] leading-normal mt-1">
+                        Please upload an image screenshot of your mobile banking transfer or deposit slip. Max size 5MB.
+                      </p>
+                    </div>
+
+                    <p className="text-xs text-[var(--neu-text-muted)] italic leading-relaxed border-t border-[var(--neu-border)] pt-4">
+                      ⚠️ <strong>Note:</strong> Your session will be booked under "Pending Verification" until our accounts team verifies your transfer screenshot.
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Submit Section */}
+            <div className="pt-6 text-center space-y-4">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full sm:w-auto px-12 py-4 rounded-xl text-base font-extrabold cursor-pointer transition-all duration-300 neu-btn-primary disabled:opacity-50 disabled:cursor-not-allowed border-none"
+              >
+                {isSubmitting ? 'Submitting...' : (paymentMethod === 'safepay' ? 'Confirm & Pay' : 'Submit for Verification')}
+              </button>
+              
+              <p className="text-[10px] text-[var(--neu-text-faint)] max-w-sm mx-auto leading-normal">
+                By completing booking, you agree to our 24-hour cancellation policy.
+              </p>
+            </div>
+
+          </form>
+        )}
+      </div>
+
+      {/* Sticky Bottom Summary Bar */}
+      <AnimatePresence>
+        {selectedPackage && !isSubmitted && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed bottom-0 left-0 right-0 z-40 bg-[var(--neu-card-bg)] border-t border-[var(--neu-border)] py-4 px-6 md:px-12 shadow-[0_-10px_30px_rgba(0,0,0,0.15)] flex flex-row items-center justify-between gap-4"
+          >
+            <div>
+              <span className="text-[10px] uppercase font-bold text-[var(--neu-accent)] tracking-wider block">Selected Package</span>
+              <strong className="text-sm md:text-base font-bold text-[var(--neu-text)]">{selectedPackage.name}</strong>
+              <span className="text-xs md:text-sm text-[var(--neu-text-muted)] ml-2">( {selectedPackage.price} )</span>
+            </div>
+            
+            <button
+              onClick={scrollToForm}
+              className="px-5 py-2.5 rounded-lg text-xs font-bold bg-[var(--neu-accent)] hover:bg-[var(--neu-accent-hover)] text-[var(--neu-base)] transition-colors cursor-pointer shadow-md border-none"
+            >
+              Continue to Details &rarr;
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}

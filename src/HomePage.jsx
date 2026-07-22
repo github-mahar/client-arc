@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import WhyCounseling from './components/WhyCounseling';
@@ -9,6 +11,19 @@ import eMeetingImg from './assets/E-meet.png';
 import physicalImg from './assets/P-meet.png';
 
 export default function HomePage() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.scrollToHash) {
+      const element = document.querySelector(location.state.scrollToHash);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+      }
+    }
+  }, [location]);
+
   return (
     <div className="min-h-screen font-sans overflow-x-hidden pt-20 bg-[var(--neu-base)] text-[var(--neu-text)] transition-colors duration-300">
       <Navbar />

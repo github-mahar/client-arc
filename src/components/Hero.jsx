@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 // NOTE: This placeholder male model photo should be swapped for Abdul Rehman Cheema's actual photo once received from the client.
 import therapistImg from '../assets/IMG_7991.jpeg';
 
 export default function Hero() {
+  const navigate = useNavigate();
   const tags = [
     'Career Decisions',
     'Self-Development',
@@ -31,7 +33,13 @@ export default function Hero() {
           </div>
 
           <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-[var(--neu-text)] transition-colors duration-300">
-            From Confusion To Clarity
+            <span style={{ textDecoration: 'underline wavy', textDecorationColor: 'var(--neu-accent)', textUnderlineOffset: '4px' }}>
+              Confusion
+            </span>{' '}
+            To{' '}
+            <span style={{ textDecoration: 'underline solid', textDecorationColor: 'var(--neu-accent)', textUnderlineOffset: '4px' }}>
+              Clarity
+            </span>
           </h1>
         </motion.div>
 
@@ -67,6 +75,10 @@ export default function Hero() {
             <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed text-[var(--neu-text-muted)] transition-colors duration-300">
               Islamic counselor blending Psychology, Neuroscience, and Shariah to provide practical guidance.
             </p>
+
+            <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed text-[var(--neu-text-muted)] transition-colors duration-300" style={{ textDecoration: 'line-through' }}>
+              Medical or Clinical Treatment
+            </p>
           </div>
 
           <div className="flex flex-wrap justify-center gap-2.5 max-w-xl mx-auto">
@@ -83,7 +95,8 @@ export default function Hero() {
           <div className="pt-2">
             <motion.button
               whileTap={{ scale: 0.97 }}
-              className="glass-btn-primary px-8 py-4 text-base cursor-pointer font-bold transition-all duration-300"
+              onClick={() => navigate('/booking')}
+              className="glass-btn-primary px-8 py-4 text-base cursor-pointer font-bold transition-all duration-300 border-none"
             >
               Book a Session
             </motion.button>
