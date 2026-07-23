@@ -46,7 +46,7 @@ export default function WhyCounseling() {
             {/* Translation and citation block */}
             <div className="text-left space-y-3">
               {/* [VERIFY WITH CLIENT] - English translation accuracy for Surah Aal-Imran 3:159 */}
-              <p className="italic text-lg md:text-xl font-medium leading-relaxed text-[var(--neu-text)] transition-colors duration-300">
+              <p className="text-sm md:text-lg font-small leading-relaxed text-[var(--neu-text)] transition-colors duration-300">
                 &ldquo;And Consult them in matters.&rdquo;
               </p>
               <p className="text-xs font-bold uppercase tracking-wider text-[var(--neu-accent)] transition-colors duration-300">

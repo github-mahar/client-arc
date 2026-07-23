@@ -47,7 +47,7 @@ export default function WhatsAppWidget() {
         style={{
           position: 'fixed',
           bottom: popupBottom,
-          right: '1.5rem',
+          left: '1.5rem',
           zIndex: 9998,
           width: 'min(360px, calc(100vw - 3rem))',
           pointerEvents: isOpen ? 'auto' : 'none',
@@ -239,7 +239,7 @@ export default function WhatsAppWidget() {
         style={{
           position: 'fixed',
           bottom: fabBottom,
-          right: '1.5rem',
+          left: '1.5rem',
           zIndex: 9999,
           width: '60px',
           height: '60px',
