@@ -35,14 +35,20 @@ export default function Hero() {
             Welcome Here!
           </div>
 
-          <h1 className="grid grid-cols-2 w-fit mx-auto gap-x-10 leading-none text-[var(--neu-text)] transition-colors duration-300">
-            <span className="flex flex-col text-center">
-              <span className="text-2xl md:text-4xl font-extrabold tracking-widest">FROM</span>
-              <span className="text-4xl md:text-6xl font-extrabold tracking-widest">CONFUSION</span>
+          <h1 className="text-left leading-tight text-[var(--neu-text)] transition-colors duration-300">
+            {/* "from" with gold highlight box */}
+            <span className="block mb-1">
+              <span className="inline-block italic font-bold text-xl md:text-2xl text-[var(--neu-base)] bg-[var(--neu-accent)] px-2 py-0.5 rounded-sm">
+                from
+              </span>
             </span>
-            <span className="flex flex-col text-center">
-              <span className="text-2xl md:text-4xl font-extrabold tracking-widest">tO</span>
-              <span className="text-4xl md:text-6xl font-extrabold tracking-widest">CLARITY</span>
+            {/* "Confusion [to] Clarity" */}
+            <span className="flex items-center gap-3 flex-wrap">
+              <span className="text-4xl md:text-6xl font-extrabold text-[var(--neu-accent)]">Confusion</span>
+              <span className="inline-flex items-center justify-center text-sm md:text-base font-bold text-[var(--neu-accent)] border-2 border-[var(--neu-accent)] px-2 py-0.5 rounded-sm">
+                to
+              </span>
+              <span className="text-4xl md:text-6xl font-extrabold text-[var(--neu-accent)]">Clarity</span>
             </span>
           </h1>
         </motion.div>

@@ -107,6 +107,7 @@ export default function BookingPage() {
   const [phone, setPhone] = useState('');
   const [preferredDate, setPreferredDate] = useState('');
   const [preferredTimeSlot, setPreferredTimeSlot] = useState('');
+  const [matter, setMatter] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('bank');
   const [screenshot, setScreenshot] = useState(null);
   const [screenshotPreview, setScreenshotPreview] = useState('');
@@ -258,8 +259,7 @@ export default function BookingPage() {
         phone: phone || null,
         preferred_date: preferredDate,
         preferred_time_slot: preferredTimeSlot,
-        payment_method: 'bank_transfer',
-        payment_status: 'pending', // Public client must always send 'pending'
+        matter: matter || null,
         receipt_path: receiptPath || null
       };
 
@@ -632,6 +632,24 @@ export default function BookingPage() {
                       Note: You must provide at least one contact method (Email or Phone) so we can send details.
                     </p>
                   )}
+                </div>
+
+                {/* Briefly Explain Your Matter */}
+                <div className="md:col-span-2 space-y-2">
+                  <label htmlFor="matter" className="text-xs font-bold uppercase tracking-wider text-[var(--neu-text-muted)] flex items-center gap-1.5">
+                    <span className="text-[var(--neu-accent)] text-sm">✦</span> Briefly Explain Your Matter
+                  </label>
+                  <textarea
+                    id="matter"
+                    value={matter}
+                    onChange={(e) => setMatter(e.target.value)}
+                    rows={4}
+                    placeholder="Briefly describe what you'd like to discuss or work through in your session…"
+                    className="w-full px-4 py-3 rounded-lg bg-[var(--neu-card-bg)] border border-[var(--neu-border)] text-sm text-[var(--neu-text)] focus:outline-none focus:border-[var(--neu-border-solid)] focus:ring-1 focus:ring-[var(--neu-accent)] transition-all resize-none placeholder:text-[var(--neu-text-faint)] leading-relaxed"
+                  />
+                  <p className="text-[10px] text-[var(--neu-text-faint)]">
+                    Optional — everything you share is strictly confidential.
+                  </p>
                 </div>
 
                 {/* Time Slots */}
