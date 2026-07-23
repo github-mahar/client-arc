@@ -14,6 +14,7 @@ export default function HomePage() {
   const location = useLocation();
 
   useEffect(() => {
+    document.title = "Abdul Rehman Cheema (ARC) — Islamic Counselling & Life Guidance";
     if (location.state?.scrollToHash) {
       const element = document.querySelector(location.state.scrollToHash);
       if (element) {
@@ -56,10 +57,10 @@ export default function HomePage() {
         <div className="container mx-auto px-6 md:px-12 max-w-5xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
             <div className="group relative overflow-hidden rounded-xl border border-[var(--neu-border)] transition-all duration-300 hover:border-[var(--neu-accent)]">
-              <img src={eMeetingImg} alt="E-Meeting" className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105" />
+              <img src={eMeetingImg} alt="E-Meeting Counselling Session — Online Consultation with Abdul Rehman Cheema" className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105" />
             </div>
             <div className="group relative overflow-hidden rounded-xl border border-[var(--neu-border)] transition-all duration-300 hover:border-[var(--neu-accent)]">
-              <img src={physicalImg} alt="Physical Meeting" className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105" />
+              <img src={physicalImg} alt="Physical In-Person Counselling Meeting — Consultation with Abdul Rehman Cheema" className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105" />
             </div>
           </div>
         </div>

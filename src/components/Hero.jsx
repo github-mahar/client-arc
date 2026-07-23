@@ -63,7 +63,7 @@ export default function Hero() {
           <div className="relative aspect-[4/5] w-full rounded-2xl overflow-hidden bg-[var(--neu-card-bg)] border border-[var(--neu-border)] shadow-2xl transition-all duration-300">
             <img
               src={therapistImg}
-              alt="Abdul Rehman Cheema (Placeholder)"
+              alt="Abdul Rehman Cheema — Islamic Counsellor"
               className="object-cover w-full h-full grayscale-[10%] contrast-[1.05]"
             />
             {/* Dark gradient overlay that adjusts to the base theme background */}

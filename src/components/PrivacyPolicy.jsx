@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShieldCheck } from 'lucide-react';
@@ -86,6 +87,10 @@ const fadeUp = {
 
 export default function PrivacyPolicy() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Privacy Policy — Abdul Rehman Cheema (ARC)";
+  }, []);
 
   return (
     <div className="min-h-screen pt-24 pb-20 bg-[var(--neu-base)] text-[var(--neu-text)] transition-colors duration-300">

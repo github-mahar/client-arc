@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const WHATSAPP_NUMBER = '+923458612538'; // Replace with actual number
 const DEFAULT_MESSAGE = 'Hello! I would like to know more about your counseling services.';
@@ -8,6 +9,11 @@ export default function WhatsAppWidget() {
   const [message, setMessage] = useState(DEFAULT_MESSAGE);
   const [mounted, setMounted] = useState(false);
   const [pulse, setPulse] = useState(true);
+  const location = useLocation();
+
+  const isBookingPage = location.pathname === '/booking';
+  const fabBottom = isBookingPage ? '5.25rem' : '1.5rem';
+  const popupBottom = isBookingPage ? '9.25rem' : '5.5rem';
 
   useEffect(() => {
     setMounted(true);
@@ -39,14 +45,14 @@ export default function WhatsAppWidget() {
         className={`whatsapp-popup ${isOpen ? 'whatsapp-popup--open' : ''}`}
         style={{
           position: 'fixed',
-          bottom: '6rem',
+          bottom: popupBottom,
           right: '1.5rem',
           zIndex: 9998,
           width: 'min(360px, calc(100vw - 3rem))',
           pointerEvents: isOpen ? 'auto' : 'none',
           opacity: isOpen ? 1 : 0,
           transform: isOpen ? 'translateY(0) scale(1)' : 'translateY(16px) scale(0.95)',
-          transition: 'opacity 0.3s ease, transform 0.3s ease',
+          transition: 'opacity 0.3s ease, transform 0.3s ease, bottom 0.3s ease',
         }}
       >
         {/* Header */}
@@ -234,7 +240,7 @@ export default function WhatsAppWidget() {
         aria-label={isOpen ? 'Close WhatsApp chat' : 'Open WhatsApp chat'}
         style={{
           position: 'fixed',
-          bottom: '1.5rem',
+          bottom: fabBottom,
           right: '1.5rem',
           zIndex: 9999,
           width: '40px',
@@ -247,7 +253,7 @@ export default function WhatsAppWidget() {
           alignItems: 'center',
           justifyContent: 'center',
           boxShadow: '0 4px 16px rgba(37, 211, 102, 0.4)',
-          transition: 'transform 0.3s ease, box-shadow 0.3s ease, background 0.2s',
+          transition: 'transform 0.3s ease, box-shadow 0.3s ease, background 0.2s, bottom 0.3s ease',
           transform: mounted ? 'scale(1)' : 'scale(0)',
         }}
         onMouseEnter={(e) => {

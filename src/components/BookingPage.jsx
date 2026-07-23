@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Clock, User, Mail, Phone, Landmark, Upload, CheckCircle, ArrowLeft, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, User, Mail, Phone, Landmark, Upload, CheckCircle, ArrowLeft, AlertCircle, Copy, Check, QrCode } from 'lucide-react';
 import Navbar from './Navbar';
 import { supabase } from '../lib/supabaseClient';
+import ublQrImg from '../assets/ubl-qr.png';
 
 const PACKAGES = [
   {
@@ -111,6 +112,15 @@ export default function BookingPage() {
   const [paymentMethod, setPaymentMethod] = useState('bank');
   const [screenshot, setScreenshot] = useState(null);
   const [screenshotPreview, setScreenshotPreview] = useState('');
+  const [copiedField, setCopiedField] = useState(null);
+
+  const handleCopy = (text, fieldKey) => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+    }
+    setCopiedField(fieldKey);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
   
   // Validation and UI states
   const [errors, setErrors] = useState({});
@@ -119,8 +129,9 @@ export default function BookingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
-  // Set package selection if navigating with state
+  // Set package selection if navigating with state & update page title
   useEffect(() => {
+    document.title = "Book a Session — Abdul Rehman Cheema (ARC)";
     if (initialPackageId) {
       const found = PACKAGES.find(p => p.id === initialPackageId);
       if (found) {
@@ -725,46 +736,127 @@ export default function BookingPage() {
                     className="space-y-6 p-5 rounded-xl bg-[var(--neu-card-bg)] border border-[var(--neu-border)]"
                   >
                     {/* Payment Details Display */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-[var(--neu-border)] pb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-[var(--neu-border)] pb-4">
 
                       {/* UBL Bank Transfer */}
-                      <div className="space-y-3 p-4 rounded-lg bg-[var(--neu-base)] border border-[var(--neu-border)]">
-                        <span className="text-[var(--neu-accent)] uppercase text-[9px] tracking-wider font-bold block">🏦 Bank Transfer (UBL)</span>
-                        <div className="space-y-2 text-xs">
-                          <div>
-                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Title</span>
-                            <strong className="text-[var(--neu-text)] text-sm">Abdul Rehman</strong>
+                      <div className="flex flex-col justify-between space-y-3 p-4 rounded-lg bg-[var(--neu-base)] border border-[var(--neu-border)]">
+                        <div>
+                          <span className="text-[var(--neu-accent)] uppercase text-[9px] tracking-wider font-bold block mb-3">🏦 Bank Transfer (UBL)</span>
+                          <div className="space-y-3 text-xs">
+                            <div>
+                              <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Title</span>
+                              <strong className="text-[var(--neu-text)] text-sm">Abdul Rehman</strong>
+                            </div>
+                            <div>
+                              <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Bank Name</span>
+                              <strong className="text-[var(--neu-text)] text-sm">United Bank Limited (UBL)</strong>
+                            </div>
+                            <div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Number</span>
+                                <button
+                                  type="button"
+                                  onClick={() => handleCopy('1064309938925', 'ubl_acc')}
+                                  title={copiedField === 'ubl_acc' ? 'Copied!' : 'Copy Account Number'}
+                                  className="p-1.5 rounded bg-[var(--neu-accent)]/15 text-[var(--neu-accent)] hover:bg-[var(--neu-accent)] hover:text-[var(--neu-base)] transition-all cursor-pointer border-none flex items-center justify-center"
+                                >
+                                  {copiedField === 'ubl_acc' ? (
+                                    <Check className="w-3.5 h-3.5 text-green-500" />
+                                  ) : (
+                                    <Copy className="w-3.5 h-3.5" />
+                                  )}
+                                </button>
+                              </div>
+                              <strong className="text-[var(--neu-text)] text-sm tracking-widest block mt-0.5">1064309938925</strong>
+                            </div>
+                            <div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">IBAN</span>
+                                <button
+                                  type="button"
+                                  onClick={() => handleCopy('PK08UNIL0109000309938925', 'ubl_iban')}
+                                  title={copiedField === 'ubl_iban' ? 'Copied!' : 'Copy IBAN'}
+                                  className="p-1.5 rounded bg-[var(--neu-accent)]/15 text-[var(--neu-accent)] hover:bg-[var(--neu-accent)] hover:text-[var(--neu-base)] transition-all cursor-pointer border-none flex items-center justify-center"
+                                >
+                                  {copiedField === 'ubl_iban' ? (
+                                    <Check className="w-3.5 h-3.5 text-green-500" />
+                                  ) : (
+                                    <Copy className="w-3.5 h-3.5" />
+                                  )}
+                                </button>
+                              </div>
+                              <strong className="text-[var(--neu-text)] text-xs tracking-wider block mt-0.5 break-all">PK08 UNIL 0109 0003 0993 8925</strong>
+                            </div>
                           </div>
-                          <div>
-                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Bank Name</span>
-                            <strong className="text-[var(--neu-text)] text-sm">United Bank Limited (UBL)</strong>
+                        </div>
+
+                        {/* QR Code section inside UBL card */}
+                        <div className="pt-3 border-t border-[var(--neu-border)] flex flex-col items-center text-center">
+                          <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider font-bold mb-2 flex items-center gap-1">
+                            <QrCode className="w-3.5 h-3.5 text-[var(--neu-accent)]" /> Scan QR Code to Pay (UBL)
+                          </span>
+                          <div className="p-2 bg-white rounded-xl shadow-md border border-stone-200 inline-block">
+                            <img
+                              src={ublQrImg}
+                              alt="UBL Payment QR Code - Abdul Rehman 8925"
+                              className="w-36 h-36 object-contain rounded-lg"
+                            />
                           </div>
-                          <div>
-                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Number</span>
-                            <strong className="text-[var(--neu-text)] text-sm tracking-widest">1064309938925</strong>
-                          </div>
-                          <div>
-                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">IBAN</span>
-                            <strong className="text-[var(--neu-text)] text-sm tracking-widest">PK08 UNIL 0109 0003 0993 8925</strong>
-                          </div>
+                          <span className="text-[10px] font-bold text-[var(--neu-text)] mt-1.5">
+                            Abdul Rehman - 8925
+                          </span>
                         </div>
                       </div>
 
                       {/* EasyPaisa */}
-                      <div className="space-y-3 p-4 rounded-lg bg-[var(--neu-base)] border border-[var(--neu-border)]">
-                        <span className="text-[var(--neu-accent)] uppercase text-[9px] tracking-wider font-bold block">📱 EasyPaisa</span>
-                        <div className="space-y-2 text-xs">
-                          <div>
-                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Title</span>
-                            <strong className="text-[var(--neu-text)] text-sm">Abdul Rehman</strong>
-                          </div>
-                          <div>
-                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Bank Title</span>
-                            <strong className="text-[var(--neu-text)] text-sm">EasyPaisa</strong>
-                          </div>
-                          <div>
-                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Mobile Number</span>
-                            <strong className="text-[var(--neu-text)] text-sm tracking-widest">0345 8612538</strong>
+                      <div className="flex flex-col justify-between space-y-3 p-4 rounded-lg bg-[var(--neu-base)] border border-[var(--neu-border)]">
+                        <div>
+                          <span className="text-[var(--neu-accent)] uppercase text-[9px] tracking-wider font-bold block mb-3">📱 EasyPaisa</span>
+                          <div className="space-y-3 text-xs">
+                            <div>
+                              <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Title</span>
+                              <strong className="text-[var(--neu-text)] text-sm">Abdul Rehman</strong>
+                            </div>
+                            <div>
+                              <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Bank Title</span>
+                              <strong className="text-[var(--neu-text)] text-sm">EasyPaisa</strong>
+                            </div>
+                            <div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Mobile Number</span>
+                                <button
+                                  type="button"
+                                  onClick={() => handleCopy('03458612538', 'ep_mobile')}
+                                  title={copiedField === 'ep_mobile' ? 'Copied!' : 'Copy Mobile Number'}
+                                  className="p-1.5 rounded bg-[var(--neu-accent)]/15 text-[var(--neu-accent)] hover:bg-[var(--neu-accent)] hover:text-[var(--neu-base)] transition-all cursor-pointer border-none flex items-center justify-center"
+                                >
+                                  {copiedField === 'ep_mobile' ? (
+                                    <Check className="w-3.5 h-3.5 text-green-500" />
+                                  ) : (
+                                    <Copy className="w-3.5 h-3.5" />
+                                  )}
+                                </button>
+                              </div>
+                              <strong className="text-[var(--neu-text)] text-sm tracking-widest block mt-0.5">0345 8612538</strong>
+                            </div>
+                            <div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">IBAN</span>
+                                <button
+                                  type="button"
+                                  onClick={() => handleCopy('PK49TMFB0000000082342367', 'ep_iban')}
+                                  title={copiedField === 'ep_iban' ? 'Copied!' : 'Copy IBAN'}
+                                  className="p-1.5 rounded bg-[var(--neu-accent)]/15 text-[var(--neu-accent)] hover:bg-[var(--neu-accent)] hover:text-[var(--neu-base)] transition-all cursor-pointer border-none flex items-center justify-center"
+                                >
+                                  {copiedField === 'ep_iban' ? (
+                                    <Check className="w-3.5 h-3.5 text-green-500" />
+                                  ) : (
+                                    <Copy className="w-3.5 h-3.5" />
+                                  )}
+                                </button>
+                              </div>
+                              <strong className="text-[var(--neu-text)] text-xs tracking-wider block mt-0.5 break-all">PK49 TMFB 0000 0000 8234 2367</strong>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -877,7 +969,7 @@ export default function BookingPage() {
               onClick={scrollToForm}
               className="px-5 py-2.5 rounded-lg text-xs font-bold bg-[var(--neu-accent)] hover:bg-[var(--neu-accent-hover)] text-[var(--neu-base)] transition-colors cursor-pointer shadow-md border-none"
             >
-              Continue to Details &rarr;
+              Submit
             </button>
           </motion.div>
         )}
