@@ -45,7 +45,7 @@ export default function Hero() {
             {/* "Confusion [to] Clarity" */}
             <span className="flex items-center gap-3 flex-wrap">
               <span className="text-4xl md:text-6xl font-extrabold text-[var(--neu-accent)]">Confusion</span>
-              <span className="inline-flex items-center justify-center text-sm md:text-base font-bold text-[var(--neu-accent)] border-2 border-[var(--neu-accent)] px-2 py-0.5 rounded-sm">
+              <span className="inline-flex items-center italic justify-center text-sm md:text-base font-bold text-[var(--neu-accent)] border-2 border-[var(--neu-accent)] px-2 py-0.5 rounded-sm">
                 to
               </span>
               <span className="text-4xl md:text-6xl font-extrabold text-[var(--neu-accent)]">Clarity</span>
