@@ -358,7 +358,7 @@ export default function BookingPage() {
                 </span>
               </h1>
               <p className="text-[var(--neu-text-muted)] max-w-xl mx-auto">
-                Follow our <span className="text-[var(--neu-accent)] font-bold">secure three-step process</span> to reserve your therapy slot.
+                Follow our <span className="text-[var(--neu-accent)] font-bold">secure three-step process</span> to reserve your counselling slot.
               </p>
             </div>
 
@@ -405,8 +405,8 @@ export default function BookingPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4, delay: idx * 0.07 }}
                       className={`relative flex flex-col rounded-2xl border transition-all duration-300 overflow-hidden ${isSelected
-                          ? 'border-[var(--neu-accent)] shadow-[0_0_28px_rgba(240,168,56,0.22)] scale-[1.02]'
-                          : 'border-[var(--neu-border)] hover:border-[var(--neu-accent)]/60'
+                        ? 'border-[var(--neu-accent)] shadow-[0_0_28px_rgba(240,168,56,0.22)] scale-[1.02]'
+                        : 'border-[var(--neu-border)] hover:border-[var(--neu-accent)]/60'
                         } bg-[var(--neu-card-bg)]`}
                     >
                       {/* Badge row */}
@@ -486,8 +486,8 @@ export default function BookingPage() {
                             setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
                           }}
                           className={`mt-auto w-full py-3 rounded-xl text-sm font-bold transition-all duration-300 border cursor-pointer ${isSelected
-                              ? 'bg-[var(--neu-accent)] text-[var(--neu-base)] border-[var(--neu-accent)] shadow-md'
-                              : 'bg-transparent text-[var(--neu-text)] border-[var(--neu-border)] hover:border-[var(--neu-accent)] hover:text-[var(--neu-accent)]'
+                            ? 'bg-[var(--neu-accent)] text-[var(--neu-base)] border-[var(--neu-accent)] shadow-md'
+                            : 'bg-transparent text-[var(--neu-text)] border-[var(--neu-border)] hover:border-[var(--neu-accent)] hover:text-[var(--neu-accent)]'
                             }`}
                         >
                           {isSelected ? '✓ Selected' : 'Select Package'}
@@ -683,8 +683,8 @@ export default function BookingPage() {
                             });
                           }}
                           className={`flex flex-col items-center justify-center p-4 rounded-xl border text-center transition-all cursor-pointer ${isSelected
-                              ? 'bg-[var(--neu-accent)] border-[var(--neu-accent)] text-[var(--neu-base)] shadow-[0_4px_12px_rgba(184,121,31,0.2)]'
-                              : 'bg-[var(--neu-card-bg)] border-[var(--neu-border)] text-[var(--neu-text)] hover:border-[var(--neu-accent)]'
+                            ? 'bg-[var(--neu-accent)] border-[var(--neu-accent)] text-[var(--neu-base)] shadow-[0_4px_12px_rgba(184,121,31,0.2)]'
+                            : 'bg-[var(--neu-card-bg)] border-[var(--neu-border)] text-[var(--neu-text)] hover:border-[var(--neu-accent)]'
                             }`}
                         >
                           <span className="text-sm font-bold">{slot.label}</span>
@@ -813,7 +813,7 @@ export default function BookingPage() {
                         <div className="space-y-3 text-xs">
                           <div>
                             <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Title</span>
-                            <strong className="text-[var(--neu-text)] text-sm">Abdul Rehman</strong>
+                            <strong className="text-[var(--neu-text)] text-sm">Abdur Rehman</strong>
                           </div>
                           <div>
                             <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Bank Title</span>
