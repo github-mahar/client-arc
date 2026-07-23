@@ -1,4 +1,5 @@
 import { Mail, Phone, MessageCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
 
 export default function Footer() {
@@ -107,18 +108,18 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[var(--neu-text-faint)] transition-colors duration-300">
           <p>© {new Date().getFullYear()} Abdul Rehman Cheema (ARC). All rights reserved.</p>
           <div className="flex gap-4">
-            <a
-              href="#"
+            <Link
+              to="/privacy"
               className="transition-colors hover:text-[var(--neu-accent)]"
             >
               Privacy Policy
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/terms"
               className="transition-colors hover:text-[var(--neu-accent)]"
             >
               Terms of Service
-            </a>
+            </Link>
           </div>
         </div>
       </div>

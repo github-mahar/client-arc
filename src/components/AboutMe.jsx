@@ -20,12 +20,15 @@ export default function AboutMe() {
     },
   ];
 
-  const useCases = [
-    'Self-Development',
-    'Relationships Issues',
+  const tags = [
     'Career Decisions',
+    'Self-Development',
+    'Work-Life Balance',
+    'Relationships Issues',
     'Marital Challenges',
-    'Spiritual Well-Being'
+    'Purposeful Parenting',
+    'Spiritual Well-Being',
+    'Spiritual Hollowness'
   ];
 
   return (
@@ -90,7 +93,7 @@ export default function AboutMe() {
               Focus Areas & Specialization
             </h4>
             <div className="flex flex-wrap justify-center gap-2.5">
-              {useCases.map((tag) => (
+              {tags.map((tag) => (
                 <span
                   key={tag}
                   className="px-3.5 py-1.5 bg-[var(--neu-base)] border border-[var(--neu-border)] text-[var(--neu-text-muted)] text-xs font-bold rounded-lg hover:border-[var(--neu-accent)] hover:text-[var(--neu-text)] transition-colors duration-300 cursor-default"

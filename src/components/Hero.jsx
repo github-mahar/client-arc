@@ -8,9 +8,12 @@ export default function Hero() {
   const tags = [
     'Career Decisions',
     'Self-Development',
+    'Work-Life Balance',
     'Relationships Issues',
     'Marital Challenges',
-    'Spiritual Well-Being'
+    'Purposeful Parenting',
+    'Spiritual Well-Being',
+    'Spiritual Hollowness'
   ];
 
   return (
@@ -32,13 +35,14 @@ export default function Hero() {
             Welcome Here!
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-[var(--neu-text)] transition-colors duration-300">
-            <span style={{ textDecoration: 'underline wavy', textDecorationColor: 'var(--neu-accent)', textUnderlineOffset: '4px' }}>
-              Confusion
-            </span>{' '}
-            To{' '}
-            <span style={{ textDecoration: 'underline solid', textDecorationColor: 'var(--neu-accent)', textUnderlineOffset: '4px' }}>
-              Clarity
+          <h1 className="grid grid-cols-2 w-fit mx-auto gap-x-10 leading-none text-[var(--neu-text)] transition-colors duration-300">
+            <span className="flex flex-col text-center">
+              <span className="text-2xl md:text-4xl font-extrabold tracking-widest">FROM</span>
+              <span className="text-4xl md:text-6xl font-extrabold tracking-widest">CONFUSION</span>
+            </span>
+            <span className="flex flex-col text-center">
+              <span className="text-2xl md:text-4xl font-extrabold tracking-widest">tO</span>
+              <span className="text-4xl md:text-6xl font-extrabold tracking-widest">CLARITY</span>
             </span>
           </h1>
         </motion.div>

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Clock, User, Mail, Phone, CreditCard, Landmark, Upload, CheckCircle, ArrowLeft, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, User, Mail, Phone, Landmark, Upload, CheckCircle, ArrowLeft, AlertCircle } from 'lucide-react';
 import Navbar from './Navbar';
 import { supabase } from '../lib/supabaseClient';
 
@@ -9,43 +9,80 @@ const PACKAGES = [
   {
     id: '60min',
     name: '60 Minute Session',
-    description: 'A focused, one-on-one session to address immediate concerns and find actionable coping strategies.',
+    description: 'A safe first conversation to explore what you are carrying and whether we are the right fit.',
     price: 'PKR 10,000',
-    duration: '1 Session / 60 Mins',
+    duration: '60 Minutes',
     isPopular: false,
+    features: [
+      'Full private 1:1 session',
+      'Safe, confidential space',
+      'Clarity on stress, anxiety, or relationship struggles',
+      'Personalized direction forward',
+      'Perfect for first-time clients',
+    ],
   },
   {
     id: '3sessions',
     name: '3 Sessions Package',
-    description: 'Deep-dive counselling to unpack emotional blocks, establish therapeutic goals, and build resilience.',
+    description: 'More time to go deeper when you are navigating complex emotions or need space to untangle something heavy.',
     price: 'PKR 25,000',
+    originalPrice: 'PKR 30,000',
     duration: '3 Sessions',
     isPopular: true,
+    features: [
+      'Three full private sessions',
+      'Continuity for deeper emotional exploration',
+      'Greater clarity on complex challenges',
+      'Ideal for relationship or personal breakthroughs',
+      'Structured progress across sessions',
+    ],
   },
   {
     id: 'urgent',
     name: 'Urgent Session',
-    description: 'Priority booking within 24 hours for acute distress, critical life events, or sudden relationship issues.',
+    description: 'For those moments when you cannot wait and need someone who understands.',
     price: 'PKR 14,500',
-    duration: '1 Session / Priority',
+    duration: 'Priority Access · 60 Minutes',
     isPopular: false,
+    features: [
+      'Priority booking for immediate support',
+      'Direct access when timing matters most',
+      'Fast clarity during emotional overwhelm',
+      'Ideal for betrayal discovery, heartbreak, or sudden crisis',
+      'Calm, direction, and immediate guidance',
+    ],
   },
   {
     id: '5sessions',
     name: '5 Sessions Package',
     description: 'Comprehensive therapy plan exploring core behaviors, relationship dynamics, and lasting solutions.',
     price: 'PKR 45,000',
+    originalPrice: 'PKR 50,000',
     duration: '5 Sessions',
     isPopular: false,
+    features: [
+      'Five structured private sessions',
+      'Deep behavioral and emotional exploration',
+      'Relationship dynamics and conflict resolution',
+      'Lasting tools for long-term well-being',
+      'Best value for ongoing support',
+    ],
   },
   {
     id: 'physical',
     name: 'Physical Meeting',
-    description: 'In-person premium consultation at our office, providing a safe, direct, and collaborative healing environment.',
+    description: 'In-person premium consultation providing a safe, direct, and collaborative healing environment.',
     price: 'PKR 25,000',
     duration: '1 In-Person Session',
     isPopular: false,
     recommended: true,
+    features: [
+      'Face-to-face private consultation',
+      'Premium in-person therapeutic space',
+      'Ideal for couples or sensitive matters',
+      'Direct, personal human connection',
+      'Available by appointment only',
+    ],
   },
 ];
 
@@ -70,7 +107,7 @@ export default function BookingPage() {
   const [phone, setPhone] = useState('');
   const [preferredDate, setPreferredDate] = useState('');
   const [preferredTimeSlot, setPreferredTimeSlot] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('safepay'); // safepay or bank
+  const [paymentMethod, setPaymentMethod] = useState('bank');
   const [screenshot, setScreenshot] = useState(null);
   const [screenshotPreview, setScreenshotPreview] = useState('');
   
@@ -221,10 +258,9 @@ export default function BookingPage() {
         phone: phone || null,
         preferred_date: preferredDate,
         preferred_time_slot: preferredTimeSlot,
-        payment_method: paymentMethod === 'bank' ? 'bank_transfer' : 'safepay',
+        payment_method: 'bank_transfer',
         payment_status: 'pending', // Public client must always send 'pending'
-        receipt_path: receiptPath || null,
-        safepay_reference: null
+        receipt_path: receiptPath || null
       };
 
       // 3. Insert into public.bookings (no .select() — anon has INSERT-only privilege)
@@ -241,10 +277,6 @@ export default function BookingPage() {
       console.log(JSON.stringify(bookingPayload, null, 2));
       console.log('--------------------------------------');
 
-      // TODO: Wire up actual Safepay redirect here
-      if (paymentMethod === 'safepay') {
-        // TODO: window.location.href = safepayCheckoutUrl
-      }
 
       // Build display data from local form state (no server row read-back)
       setSubmittedData({
@@ -292,15 +324,9 @@ export default function BookingPage() {
               We have logged your request for the <span className="font-semibold text-[var(--neu-accent)]">{submittedData?.packageName}</span>.
               We'll review your preferred slot ({submittedData?.preferredDate} - {submittedData?.preferredTimeSlot}) and confirm shortly.
             </p>
-            {submittedData?.paymentMethod === 'bank' ? (
-              <div className="p-4 rounded-xl mb-6 bg-amber-500/10 border border-amber-500/20 text-xs text-[var(--neu-text-muted)] text-left">
-                <strong>Bank Transfer Verification Pending:</strong> Since you paid via Bank Transfer, our team will review the uploaded receipt. Your session status is marked as <strong>Pending Verification</strong>.
-              </div>
-            ) : (
-              <div className="p-4 rounded-xl mb-6 bg-green-500/10 border border-green-500/20 text-xs text-[var(--neu-text-muted)] text-left">
-                <strong>Safepay Gateway:</strong> Redirect simulation complete. Transaction verified successfully.
-              </div>
-            )}
+            <div className="p-4 rounded-xl mb-6 bg-amber-500/10 border border-amber-500/20 text-xs text-[var(--neu-text-muted)] text-left">
+              <strong>Bank Transfer Verification Pending:</strong> Since you paid via Bank Transfer, our team will review the uploaded receipt. Your session status is marked as <strong>Pending Verification</strong>.
+            </div>
             <button
               onClick={() => navigate('/')}
               className="neu-btn px-6 py-2.5 text-sm cursor-pointer"
@@ -358,54 +384,115 @@ export default function BookingPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {PACKAGES.map((pkg) => {
+                {PACKAGES.map((pkg, idx) => {
                   const isSelected = selectedPackage?.id === pkg.id;
                   return (
-                    <div
+                    <motion.div
                       key={pkg.id}
-                      onClick={() => {
-                        setSelectedPackage(pkg);
-                        setErrors(prev => {
-                          const copy = { ...prev };
-                          delete copy.package;
-                          return copy;
-                        });
-                      }}
-                      className={`relative flex flex-col p-6 rounded-xl bg-[var(--neu-card-bg)] border transition-all duration-300 cursor-pointer ${
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: idx * 0.07 }}
+                      className={`relative flex flex-col rounded-2xl border transition-all duration-300 overflow-hidden ${
                         isSelected
-                          ? 'border-[var(--neu-border-solid)] shadow-[0_0_20px_rgba(184,121,31,0.2)] dark:shadow-[0_0_20px_rgba(240,168,56,0.25)] scale-[1.02]'
-                          : 'border-[var(--neu-border)] opacity-85 hover:opacity-100 hover:border-[var(--neu-accent)]'
-                      }`}
+                          ? 'border-[var(--neu-accent)] shadow-[0_0_28px_rgba(240,168,56,0.22)] scale-[1.02]'
+                          : 'border-[var(--neu-border)] hover:border-[var(--neu-accent)]/60'
+                      } bg-[var(--neu-card-bg)]`}
                     >
-                      {/* Select indicator */}
-                      <div className={`absolute top-4 right-4 w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
-                        isSelected ? 'bg-[var(--neu-accent)] border-[var(--neu-accent)]' : 'border-stone-400 dark:border-stone-600'
-                      }`}>
-                        {isSelected && <div className="w-2 h-2 rounded-full bg-[var(--neu-base)]" />}
-                      </div>
-
-                      {pkg.isPopular && (
-                        <span className="w-max text-[0.65rem] font-bold tracking-widest uppercase px-2 py-0.5 rounded bg-[var(--neu-accent)] text-[var(--neu-base)] mb-3">
-                          Popular
-                        </span>
-                      )}
-                      {pkg.recommended && (
-                        <span className="w-max text-[0.65rem] font-bold tracking-widest uppercase px-2 py-0.5 rounded bg-[var(--neu-accent)] text-[var(--neu-base)] mb-3">
-                          Recommended
-                        </span>
+                      {/* Badge row */}
+                      {(pkg.isPopular || pkg.recommended) && (
+                        <div className="px-5 pt-4">
+                          <span className="inline-block text-[0.6rem] font-black tracking-widest uppercase px-2.5 py-1 rounded-full bg-[var(--neu-accent)] text-[var(--neu-base)]">
+                            {pkg.isPopular ? '⭐ Most Popular' : '✦ Recommended'}
+                          </span>
+                        </div>
                       )}
 
-                      <h3 className="text-lg font-bold mb-1 pr-6">{pkg.name}</h3>
-                      <p className="text-xs text-[var(--neu-text-muted)] line-clamp-3 mb-4 leading-relaxed">{pkg.description}</p>
-                      
-                      <div className="mt-auto pt-4 border-t border-[var(--neu-border)] flex justify-between items-baseline">
-                        <span className="text-xs font-bold text-[var(--neu-accent)]">{pkg.duration}</span>
-                        <span className="text-xl font-extrabold">{pkg.price}</span>
+                      {/* Card body */}
+                      <div className="flex flex-col flex-1 p-5 pt-4 space-y-3">
+
+                        {/* Name */}
+                        <h3 className="text-lg font-bold text-[var(--neu-accent)] leading-tight">
+                          {pkg.name}
+                        </h3>
+
+                        {/* Price row */}
+                        <div className="flex items-baseline gap-2 flex-wrap">
+                          <span className="text-3xl font-extrabold text-[var(--neu-text)] tracking-tight">
+                            {pkg.price}
+                          </span>
+                          {pkg.originalPrice && (
+                            <span className="text-xs line-through text-[var(--neu-text-faint)]">
+                              {pkg.originalPrice}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Duration chip */}
+                        <span className="text-[11px] text-[var(--neu-text-muted)] font-medium">
+                          {pkg.duration}
+                        </span>
+
+                        {/* Save badge */}
+                        {pkg.originalPrice && (() => {
+                          const orig = parseInt(pkg.originalPrice.replace(/[^0-9]/g, ''), 10);
+                          const curr = parseInt(pkg.price.replace(/[^0-9]/g, ''), 10);
+                          const saved = orig - curr;
+                          return (
+                            <span className="w-max text-[10px] font-bold px-2.5 py-1 rounded-full bg-[var(--neu-accent)]/15 text-[var(--neu-accent)] border border-[var(--neu-accent)]/30">
+                              Save PKR {saved.toLocaleString()}
+                            </span>
+                          );
+                        })()}
+
+                        {/* Description */}
+                        <p className="text-xs text-[var(--neu-text-muted)] leading-relaxed">
+                          {pkg.description}
+                        </p>
+
+                        {/* Divider */}
+                        <div className="border-t border-[var(--neu-border)] pt-3">
+                          {/* Feature list */}
+                          <ul className="space-y-2">
+                            {pkg.features.map((f) => (
+                              <li key={f} className="flex items-start gap-2 text-xs text-[var(--neu-text-muted)]">
+                                <span className="mt-0.5 text-[var(--neu-accent)] flex-shrink-0">✓</span>
+                                <span>{f}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Select Button */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedPackage(pkg);
+                            setErrors(prev => {
+                              const copy = { ...prev };
+                              delete copy.package;
+                              return copy;
+                            });
+                            setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+                          }}
+                          className={`mt-auto w-full py-3 rounded-xl text-sm font-bold transition-all duration-300 border cursor-pointer ${
+                            isSelected
+                              ? 'bg-[var(--neu-accent)] text-[var(--neu-base)] border-[var(--neu-accent)] shadow-md'
+                              : 'bg-transparent text-[var(--neu-text)] border-[var(--neu-border)] hover:border-[var(--neu-accent)] hover:text-[var(--neu-accent)]'
+                          }`}
+                        >
+                          {isSelected ? '✓ Selected' : 'Select Package'}
+                        </button>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
+
+              {errors.package && (
+                <p className="text-xs text-amber-500/90 flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3" /> {errors.package}
+                </p>
+              )}
             </div>
 
             {/* STEP 2: CLIENT DETAILS */}
@@ -594,71 +681,23 @@ export default function BookingPage() {
             <div className="space-y-6 pt-6">
               <div className="flex items-center gap-3 border-b border-[var(--neu-border)] pb-3">
                 <span className="flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs bg-[var(--neu-accent)] text-[var(--neu-base)]">3</span>
-                <h2 className="text-xl font-bold tracking-wide">Choose Payment Method</h2>
+                <h2 className="text-xl font-bold tracking-wide">Payment Method</h2>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Safepay selection card */}
-                <div
-                  onClick={() => setPaymentMethod('safepay')}
-                  className={`flex items-center gap-4 p-5 rounded-xl border cursor-pointer transition-all ${
-                    paymentMethod === 'safepay'
-                      ? 'border-[var(--neu-border-solid)] bg-[var(--neu-card-bg)] shadow-[0_0_15px_rgba(240,168,56,0.1)]'
-                      : 'border-[var(--neu-border)] opacity-80 hover:opacity-100 hover:border-[var(--neu-accent)]'
-                  }`}
-                >
-                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 ${
-                    paymentMethod === 'safepay' ? 'bg-[var(--neu-accent)] border-[var(--neu-accent)]' : 'border-stone-400 dark:border-stone-600'
-                  }`}>
-                    {paymentMethod === 'safepay' && <div className="w-2 h-2 rounded-full bg-[var(--neu-base)]" />}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-sm font-bold flex items-center gap-2">
-                      <CreditCard className="w-4 h-4 text-[var(--neu-accent)]" /> Pay online via Safepay
-                    </h3>
-                    <p className="text-[10px] text-[var(--neu-text-faint)] mt-1">Visa, Mastercard, Alfa, EasyPaisa, JazzCash</p>
-                  </div>
+              <div className="flex items-center gap-4 p-5 rounded-xl border border-[var(--neu-border-solid)] bg-[var(--neu-card-bg)] shadow-[0_0_15px_rgba(240,168,56,0.1)]">
+                <div className="w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 bg-[var(--neu-accent)] border-[var(--neu-accent)]">
+                  <div className="w-2 h-2 rounded-full bg-[var(--neu-base)]" />
                 </div>
-
-                {/* Bank Transfer selection card */}
-                <div
-                  onClick={() => setPaymentMethod('bank')}
-                  className={`flex items-center gap-4 p-5 rounded-xl border cursor-pointer transition-all ${
-                    paymentMethod === 'bank'
-                      ? 'border-[var(--neu-border-solid)] bg-[var(--neu-card-bg)] shadow-[0_0_15px_rgba(240,168,56,0.1)]'
-                      : 'border-[var(--neu-border)] opacity-80 hover:opacity-100 hover:border-[var(--neu-accent)]'
-                  }`}
-                >
-                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 ${
-                    paymentMethod === 'bank' ? 'bg-[var(--neu-accent)] border-[var(--neu-accent)]' : 'border-stone-400 dark:border-stone-600'
-                  }`}>
-                    {paymentMethod === 'bank' && <div className="w-2 h-2 rounded-full bg-[var(--neu-base)]" />}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-sm font-bold flex items-center gap-2">
-                      <Landmark className="w-4 h-4 text-[var(--neu-accent)]" /> Bank Transfer
-                    </h3>
-                    <p className="text-[10px] text-[var(--neu-text-faint)] mt-1">Transfer directly to our bank account</p>
-                  </div>
+                <div className="flex-1">
+                  <h3 className="text-sm font-bold flex items-center gap-2">
+                    <Landmark className="w-4 h-4 text-[var(--neu-accent)]" /> Bank Transfer
+                  </h3>
+                  <p className="text-[10px] text-[var(--neu-text-faint)] mt-1">Transfer directly to our bank account</p>
                 </div>
               </div>
 
-              {/* Dynamic Payment details container */}
+              {/* Bank Transfer details */}
               <AnimatePresence mode="wait">
-                {paymentMethod === 'safepay' ? (
-                  <motion.div
-                    key="safepay"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                    className="p-5 rounded-xl bg-[var(--neu-card-bg)] border border-[var(--neu-border)]"
-                  >
-                    <p className="text-xs text-[var(--neu-text-muted)] leading-relaxed">
-                      💡 <strong>Note:</strong> On clicking confirm, you will be redirected to Safepay's secure checkout page to complete your digital transaction.
-                    </p>
-                  </motion.div>
-                ) : (
                   <motion.div
                     key="bank"
                     initial={{ opacity: 0, y: 10 }}
@@ -667,20 +706,47 @@ export default function BookingPage() {
                     transition={{ duration: 0.2 }}
                     className="space-y-6 p-5 rounded-xl bg-[var(--neu-card-bg)] border border-[var(--neu-border)]"
                   >
-                    {/* Bank Details Display */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-[var(--neu-border)] pb-4 text-xs">
-                      <div>
-                        <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Title</span>
-                        <strong className="text-[var(--neu-text)] text-sm">Abdul Rehman</strong>
+                    {/* Payment Details Display */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-[var(--neu-border)] pb-4">
+
+                      {/* UBL Bank Transfer */}
+                      <div className="space-y-3 p-4 rounded-lg bg-[var(--neu-base)] border border-[var(--neu-border)]">
+                        <span className="text-[var(--neu-accent)] uppercase text-[9px] tracking-wider font-bold block">🏦 Bank Transfer (UBL)</span>
+                        <div className="space-y-2 text-xs">
+                          <div>
+                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Title</span>
+                            <strong className="text-[var(--neu-text)] text-sm">Abdul Rehman</strong>
+                          </div>
+                          <div>
+                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Bank Name</span>
+                            <strong className="text-[var(--neu-text)] text-sm">United Bank Limited (UBL)</strong>
+                          </div>
+                          <div>
+                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">IBAN</span>
+                            <strong className="text-[var(--neu-text)] text-sm tracking-widest">PK08 UNIL 0109 0003 0993 8925</strong>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Bank Name</span>
-                        <strong className="text-[var(--neu-text)] text-sm">United Bank Limited (UBL)</strong>
+
+                      {/* EasyPaisa */}
+                      <div className="space-y-3 p-4 rounded-lg bg-[var(--neu-base)] border border-[var(--neu-border)]">
+                        <span className="text-[var(--neu-accent)] uppercase text-[9px] tracking-wider font-bold block">📱 EasyPaisa</span>
+                        <div className="space-y-2 text-xs">
+                          <div>
+                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Title</span>
+                            <strong className="text-[var(--neu-text)] text-sm">Abdul Rehman</strong>
+                          </div>
+                          <div>
+                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Bank Title</span>
+                            <strong className="text-[var(--neu-text)] text-sm">EasyPaisa</strong>
+                          </div>
+                          <div>
+                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Mobile Number</span>
+                            <strong className="text-[var(--neu-text)] text-sm tracking-widest">0345 8612538</strong>
+                          </div>
+                        </div>
                       </div>
-                      <div className="sm:col-span-2">
-                        <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">IBAN</span>
-                        <strong className="text-[var(--neu-text)] text-sm tracking-widest">PK08 UNIL 0109 0003 0993 8925</strong>
-                      </div>
+
                     </div>
 
                     {/* Screenshot File Upload */}
@@ -728,8 +794,25 @@ export default function BookingPage() {
                     <p className="text-xs text-[var(--neu-text-muted)] italic leading-relaxed border-t border-[var(--neu-border)] pt-4">
                       ⚠️ <strong>Note:</strong> Your session will be booked under "Pending Verification" until our accounts team verifies your transfer screenshot.
                     </p>
+
+                    <a
+                      href="https://wa.me/923458612538"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-3 p-3 rounded-xl bg-green-500/8 border border-green-500/20 hover:border-green-500/50 hover:bg-green-500/12 transition-all group"
+                    >
+                      <span className="text-lg leading-none">🌍</span>
+                      <div className="text-left">
+                        <p className="text-xs font-bold text-[var(--neu-text)] group-hover:text-green-400 transition-colors">
+                          International Clients
+                        </p>
+                        <p className="text-[10px] text-[var(--neu-text-muted)] leading-relaxed">
+                          For international transactions, please contact us on WhatsApp to arrange payment.
+                        </p>
+                      </div>
+                      <span className="ml-auto text-green-500 text-lg">↗</span>
+                    </a>
                   </motion.div>
-                )}
               </AnimatePresence>
             </div>
 
@@ -740,7 +823,7 @@ export default function BookingPage() {
                 disabled={isSubmitting}
                 className="w-full sm:w-auto px-12 py-4 rounded-xl text-base font-extrabold cursor-pointer transition-all duration-300 neu-btn-primary disabled:opacity-50 disabled:cursor-not-allowed border-none"
               >
-                {isSubmitting ? 'Submitting...' : (paymentMethod === 'safepay' ? 'Confirm & Pay' : 'Submit for Verification')}
+                {isSubmitting ? 'Submitting...' : 'Submit for Verification'}
               </button>
               
               <p className="text-[10px] text-[var(--neu-text-faint)] max-w-sm mx-auto leading-normal">
