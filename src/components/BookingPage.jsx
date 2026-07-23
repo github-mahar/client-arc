@@ -740,6 +740,10 @@ export default function BookingPage() {
                             <strong className="text-[var(--neu-text)] text-sm">United Bank Limited (UBL)</strong>
                           </div>
                           <div>
+                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Number</span>
+                            <strong className="text-[var(--neu-text)] text-sm tracking-widest">1064309938925</strong>
+                          </div>
+                          <div>
                             <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">IBAN</span>
                             <strong className="text-[var(--neu-text)] text-sm tracking-widest">PK08 UNIL 0109 0003 0993 8925</strong>
                           </div>

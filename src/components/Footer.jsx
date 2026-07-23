@@ -106,7 +106,11 @@ export default function Footer() {
         <hr className="my-8 border-[var(--neu-border)] transition-colors duration-300" />
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[var(--neu-text-faint)] transition-colors duration-300">
-          <p>© {new Date().getFullYear()} Abdul Rehman Cheema (ARC). All rights reserved.</p>
+          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+            <p>© {new Date().getFullYear()} Abdul Rehman Cheema (ARC). All rights reserved.</p>
+            <span className="hidden md:inline text-[var(--neu-border-solid)]">·</span>
+            <p>Developed by <span className="text-[var(--neu-accent)] font-semibold">Mahar GM</span></p>
+          </div>
           <div className="flex gap-4">
             <Link
               to="/privacy"
