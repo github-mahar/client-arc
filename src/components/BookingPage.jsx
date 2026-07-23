@@ -5,6 +5,7 @@ import { Calendar, Clock, User, Mail, Phone, Landmark, Upload, CheckCircle, Arro
 import Navbar from './Navbar';
 import { supabase } from '../lib/supabaseClient';
 import ublQrImg from '../assets/ubl-qr.png';
+import easypaisaQrImg from '../assets/easypaisa-qr.png';
 
 const PACKAGES = [
   {
@@ -357,7 +358,7 @@ export default function BookingPage() {
                 </span>
               </h1>
               <p className="text-[var(--neu-text-muted)] max-w-xl mx-auto">
-                Follow our secure three-step process to reserve your therapy slot.
+                Follow our <span className="text-[var(--neu-accent)] font-bold">secure three-step process</span> to reserve your therapy slot.
               </p>
             </div>
 
@@ -854,6 +855,23 @@ export default function BookingPage() {
                             </div>
                             <strong className="text-[var(--neu-text)] text-xs tracking-wider block mt-0.5 break-all">PK49 TMFB 0000 0000 8234 2367</strong>
                           </div>
+                        </div>
+
+                        {/* QR Code section inside EasyPaisa card */}
+                        <div className="pt-3 border-t border-[var(--neu-border)] flex flex-col items-center text-center">
+                          <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider font-bold mb-2 flex items-center gap-1">
+                            <QrCode className="w-3.5 h-3.5 text-[var(--neu-accent)]" /> Scan QR Code to Pay (EasyPaisa)
+                          </span>
+                          <div className="p-2 bg-white rounded-xl shadow-md border border-stone-200 inline-block">
+                            <img
+                              src={easypaisaQrImg}
+                              alt="EasyPaisa Payment QR Code - ABDUR REHMAN"
+                              className="w-36 h-36 object-contain rounded-lg"
+                            />
+                          </div>
+                          <span className="text-[10px] font-bold text-[var(--neu-text)] mt-1.5">
+                            ABDUR REHMAN - 2538
+                          </span>
                         </div>
                       </div>
                     </div>
