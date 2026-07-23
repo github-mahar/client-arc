@@ -100,7 +100,7 @@ export default function BookingPage() {
 
   // Get pre-selected package ID from navigation state
   const initialPackageId = location.state?.selectedPackageId || '';
-  
+
   // Form states
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [fullName, setFullName] = useState('');
@@ -121,7 +121,7 @@ export default function BookingPage() {
     setCopiedField(fieldKey);
     setTimeout(() => setCopiedField(null), 2000);
   };
-  
+
   // Validation and UI states
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -331,7 +331,7 @@ export default function BookingPage() {
               Booking Request Received!
             </h2>
             <p className="text-[var(--neu-text-muted)] leading-relaxed mb-6">
-              Thank you, <span className="font-bold text-[var(--neu-text)]">{submittedData?.fullName}</span>. 
+              Thank you, <span className="font-bold text-[var(--neu-text)]">{submittedData?.fullName}</span>.
               We have logged your request for the <span className="font-semibold text-[var(--neu-accent)]">{submittedData?.packageName}</span>.
               We'll review your preferred slot ({submittedData?.preferredDate} - {submittedData?.preferredTimeSlot}) and confirm shortly.
             </p>
@@ -347,7 +347,7 @@ export default function BookingPage() {
           </motion.div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-12">
-            
+
             {/* Header */}
             <div className="text-center space-y-4">
               <h1 className="text-4xl md:text-6xl font-extrabold text-[var(--neu-text)]">
@@ -403,17 +403,16 @@ export default function BookingPage() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4, delay: idx * 0.07 }}
-                      className={`relative flex flex-col rounded-2xl border transition-all duration-300 overflow-hidden ${
-                        isSelected
+                      className={`relative flex flex-col rounded-2xl border transition-all duration-300 overflow-hidden ${isSelected
                           ? 'border-[var(--neu-accent)] shadow-[0_0_28px_rgba(240,168,56,0.22)] scale-[1.02]'
                           : 'border-[var(--neu-border)] hover:border-[var(--neu-accent)]/60'
-                      } bg-[var(--neu-card-bg)]`}
+                        } bg-[var(--neu-card-bg)]`}
                     >
                       {/* Badge row */}
                       {(pkg.isPopular || pkg.recommended) && (
                         <div className="px-5 pt-4">
                           <span className="inline-block text-[0.6rem] font-black tracking-widest uppercase px-2.5 py-1 rounded-full bg-[var(--neu-accent)] text-[var(--neu-base)]">
-                            {pkg.isPopular ? '⭐ Most Popular' : '✦ Recommended'}
+                            {pkg.isPopular ? '⭐ Most Popular' : '✦ Recommended By ARC'}
                           </span>
                         </div>
                       )}
@@ -485,11 +484,10 @@ export default function BookingPage() {
                             });
                             setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
                           }}
-                          className={`mt-auto w-full py-3 rounded-xl text-sm font-bold transition-all duration-300 border cursor-pointer ${
-                            isSelected
+                          className={`mt-auto w-full py-3 rounded-xl text-sm font-bold transition-all duration-300 border cursor-pointer ${isSelected
                               ? 'bg-[var(--neu-accent)] text-[var(--neu-base)] border-[var(--neu-accent)] shadow-md'
                               : 'bg-transparent text-[var(--neu-text)] border-[var(--neu-border)] hover:border-[var(--neu-accent)] hover:text-[var(--neu-accent)]'
-                          }`}
+                            }`}
                         >
                           {isSelected ? '✓ Selected' : 'Select Package'}
                         </button>
@@ -683,11 +681,10 @@ export default function BookingPage() {
                               return copy;
                             });
                           }}
-                          className={`flex flex-col items-center justify-center p-4 rounded-xl border text-center transition-all cursor-pointer ${
-                            isSelected
+                          className={`flex flex-col items-center justify-center p-4 rounded-xl border text-center transition-all cursor-pointer ${isSelected
                               ? 'bg-[var(--neu-accent)] border-[var(--neu-accent)] text-[var(--neu-base)] shadow-[0_4px_12px_rgba(184,121,31,0.2)]'
                               : 'bg-[var(--neu-card-bg)] border-[var(--neu-border)] text-[var(--neu-text)] hover:border-[var(--neu-accent)]'
-                          }`}
+                            }`}
                         >
                           <span className="text-sm font-bold">{slot.label}</span>
                           <span className={`text-[10px] mt-1 ${isSelected ? 'text-[var(--neu-base)] opacity-80' : 'text-[var(--neu-text-muted)]'}`}>
@@ -727,206 +724,206 @@ export default function BookingPage() {
 
               {/* Bank Transfer details */}
               <AnimatePresence mode="wait">
-                  <motion.div
-                    key="bank"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                    className="space-y-6 p-5 rounded-xl bg-[var(--neu-card-bg)] border border-[var(--neu-border)]"
-                  >
-                    {/* Payment Details Display */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-[var(--neu-border)] pb-4">
+                <motion.div
+                  key="bank"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-6 p-5 rounded-xl bg-[var(--neu-card-bg)] border border-[var(--neu-border)]"
+                >
+                  {/* Payment Details Display */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-[var(--neu-border)] pb-4">
 
-                      {/* UBL Bank Transfer */}
-                      <div className="flex flex-col justify-between space-y-3 p-4 rounded-lg bg-[var(--neu-base)] border border-[var(--neu-border)]">
-                        <div>
-                          <span className="text-[var(--neu-accent)] uppercase text-[9px] tracking-wider font-bold block mb-3">🏦 Bank Transfer (UBL)</span>
-                          <div className="space-y-3 text-xs">
-                            <div>
-                              <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Title</span>
-                              <strong className="text-[var(--neu-text)] text-sm">Abdul Rehman</strong>
-                            </div>
-                            <div>
-                              <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Bank Name</span>
-                              <strong className="text-[var(--neu-text)] text-sm">United Bank Limited (UBL)</strong>
-                            </div>
-                            <div>
-                              <div className="flex items-center justify-between">
-                                <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Number</span>
-                                <button
-                                  type="button"
-                                  onClick={() => handleCopy('1064309938925', 'ubl_acc')}
-                                  title={copiedField === 'ubl_acc' ? 'Copied!' : 'Copy Account Number'}
-                                  className="p-1.5 rounded bg-[var(--neu-accent)]/15 text-[var(--neu-accent)] hover:bg-[var(--neu-accent)] hover:text-[var(--neu-base)] transition-all cursor-pointer border-none flex items-center justify-center"
-                                >
-                                  {copiedField === 'ubl_acc' ? (
-                                    <Check className="w-3.5 h-3.5 text-green-500" />
-                                  ) : (
-                                    <Copy className="w-3.5 h-3.5" />
-                                  )}
-                                </button>
-                              </div>
-                              <strong className="text-[var(--neu-text)] text-sm tracking-widest block mt-0.5">1064309938925</strong>
-                            </div>
-                            <div>
-                              <div className="flex items-center justify-between">
-                                <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">IBAN</span>
-                                <button
-                                  type="button"
-                                  onClick={() => handleCopy('PK08UNIL0109000309938925', 'ubl_iban')}
-                                  title={copiedField === 'ubl_iban' ? 'Copied!' : 'Copy IBAN'}
-                                  className="p-1.5 rounded bg-[var(--neu-accent)]/15 text-[var(--neu-accent)] hover:bg-[var(--neu-accent)] hover:text-[var(--neu-base)] transition-all cursor-pointer border-none flex items-center justify-center"
-                                >
-                                  {copiedField === 'ubl_iban' ? (
-                                    <Check className="w-3.5 h-3.5 text-green-500" />
-                                  ) : (
-                                    <Copy className="w-3.5 h-3.5" />
-                                  )}
-                                </button>
-                              </div>
-                              <strong className="text-[var(--neu-text)] text-xs tracking-wider block mt-0.5 break-all">PK08 UNIL 0109 0003 0993 8925</strong>
-                            </div>
+                    {/* UBL Bank Transfer */}
+                    <div className="flex flex-col justify-between space-y-3 p-4 rounded-lg bg-[var(--neu-base)] border border-[var(--neu-border)]">
+                      <div>
+                        <span className="text-[var(--neu-accent)] uppercase text-[9px] tracking-wider font-bold block mb-3">🏦 Bank Transfer (UBL)</span>
+                        <div className="space-y-3 text-xs">
+                          <div>
+                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Title</span>
+                            <strong className="text-[var(--neu-text)] text-sm">Abdul Rehman</strong>
                           </div>
-                        </div>
-
-                        {/* QR Code section inside UBL card */}
-                        <div className="pt-3 border-t border-[var(--neu-border)] flex flex-col items-center text-center">
-                          <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider font-bold mb-2 flex items-center gap-1">
-                            <QrCode className="w-3.5 h-3.5 text-[var(--neu-accent)]" /> Scan QR Code to Pay (UBL)
-                          </span>
-                          <div className="p-2 bg-white rounded-xl shadow-md border border-stone-200 inline-block">
-                            <img
-                              src={ublQrImg}
-                              alt="UBL Payment QR Code - Abdul Rehman 8925"
-                              className="w-36 h-36 object-contain rounded-lg"
-                            />
+                          <div>
+                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Bank Name</span>
+                            <strong className="text-[var(--neu-text)] text-sm">United Bank Limited (UBL)</strong>
                           </div>
-                          <span className="text-[10px] font-bold text-[var(--neu-text)] mt-1.5">
-                            Abdul Rehman - 8925
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* EasyPaisa */}
-                      <div className="flex flex-col justify-between space-y-3 p-4 rounded-lg bg-[var(--neu-base)] border border-[var(--neu-border)]">
-                        <div>
-                          <span className="text-[var(--neu-accent)] uppercase text-[9px] tracking-wider font-bold block mb-3">📱 EasyPaisa</span>
-                          <div className="space-y-3 text-xs">
-                            <div>
-                              <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Title</span>
-                              <strong className="text-[var(--neu-text)] text-sm">Abdul Rehman</strong>
+                          <div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Number</span>
+                              <button
+                                type="button"
+                                onClick={() => handleCopy('1064309938925', 'ubl_acc')}
+                                title={copiedField === 'ubl_acc' ? 'Copied!' : 'Copy Account Number'}
+                                className="p-1.5 rounded bg-[var(--neu-accent)]/15 text-[var(--neu-accent)] hover:bg-[var(--neu-accent)] hover:text-[var(--neu-base)] transition-all cursor-pointer border-none flex items-center justify-center"
+                              >
+                                {copiedField === 'ubl_acc' ? (
+                                  <Check className="w-3.5 h-3.5 text-green-500" />
+                                ) : (
+                                  <Copy className="w-3.5 h-3.5" />
+                                )}
+                              </button>
                             </div>
-                            <div>
-                              <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Bank Title</span>
-                              <strong className="text-[var(--neu-text)] text-sm">EasyPaisa</strong>
+                            <strong className="text-[var(--neu-text)] text-sm tracking-widest block mt-0.5">1064309938925</strong>
+                          </div>
+                          <div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">IBAN</span>
+                              <button
+                                type="button"
+                                onClick={() => handleCopy('PK08UNIL0109000309938925', 'ubl_iban')}
+                                title={copiedField === 'ubl_iban' ? 'Copied!' : 'Copy IBAN'}
+                                className="p-1.5 rounded bg-[var(--neu-accent)]/15 text-[var(--neu-accent)] hover:bg-[var(--neu-accent)] hover:text-[var(--neu-base)] transition-all cursor-pointer border-none flex items-center justify-center"
+                              >
+                                {copiedField === 'ubl_iban' ? (
+                                  <Check className="w-3.5 h-3.5 text-green-500" />
+                                ) : (
+                                  <Copy className="w-3.5 h-3.5" />
+                                )}
+                              </button>
                             </div>
-                            <div>
-                              <div className="flex items-center justify-between">
-                                <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Mobile Number</span>
-                                <button
-                                  type="button"
-                                  onClick={() => handleCopy('03458612538', 'ep_mobile')}
-                                  title={copiedField === 'ep_mobile' ? 'Copied!' : 'Copy Mobile Number'}
-                                  className="p-1.5 rounded bg-[var(--neu-accent)]/15 text-[var(--neu-accent)] hover:bg-[var(--neu-accent)] hover:text-[var(--neu-base)] transition-all cursor-pointer border-none flex items-center justify-center"
-                                >
-                                  {copiedField === 'ep_mobile' ? (
-                                    <Check className="w-3.5 h-3.5 text-green-500" />
-                                  ) : (
-                                    <Copy className="w-3.5 h-3.5" />
-                                  )}
-                                </button>
-                              </div>
-                              <strong className="text-[var(--neu-text)] text-sm tracking-widest block mt-0.5">0345 8612538</strong>
-                            </div>
-                            <div>
-                              <div className="flex items-center justify-between">
-                                <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">IBAN</span>
-                                <button
-                                  type="button"
-                                  onClick={() => handleCopy('PK49TMFB0000000082342367', 'ep_iban')}
-                                  title={copiedField === 'ep_iban' ? 'Copied!' : 'Copy IBAN'}
-                                  className="p-1.5 rounded bg-[var(--neu-accent)]/15 text-[var(--neu-accent)] hover:bg-[var(--neu-accent)] hover:text-[var(--neu-base)] transition-all cursor-pointer border-none flex items-center justify-center"
-                                >
-                                  {copiedField === 'ep_iban' ? (
-                                    <Check className="w-3.5 h-3.5 text-green-500" />
-                                  ) : (
-                                    <Copy className="w-3.5 h-3.5" />
-                                  )}
-                                </button>
-                              </div>
-                              <strong className="text-[var(--neu-text)] text-xs tracking-wider block mt-0.5 break-all">PK49 TMFB 0000 0000 8234 2367</strong>
-                            </div>
+                            <strong className="text-[var(--neu-text)] text-xs tracking-wider block mt-0.5 break-all">PK08 UNIL 0109 0003 0993 8925</strong>
                           </div>
                         </div>
                       </div>
 
+                      {/* QR Code section inside UBL card */}
+                      <div className="pt-3 border-t border-[var(--neu-border)] flex flex-col items-center text-center">
+                        <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider font-bold mb-2 flex items-center gap-1">
+                          <QrCode className="w-3.5 h-3.5 text-[var(--neu-accent)]" /> Scan QR Code to Pay (UBL)
+                        </span>
+                        <div className="p-2 bg-white rounded-xl shadow-md border border-stone-200 inline-block">
+                          <img
+                            src={ublQrImg}
+                            alt="UBL Payment QR Code - Abdul Rehman 8925"
+                            className="w-36 h-36 object-contain rounded-lg"
+                          />
+                        </div>
+                        <span className="text-[10px] font-bold text-[var(--neu-text)] mt-1.5">
+                          Abdul Rehman - 8925
+                        </span>
+                      </div>
                     </div>
 
-                    {/* Screenshot File Upload */}
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-wider text-[var(--neu-text-muted)] block">
-                        Upload Receipt Screenshot <span className="text-[var(--neu-accent)]">*</span>
-                      </label>
-                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-                        <label className="flex items-center justify-center gap-2 px-5 py-3 rounded-lg border border-dashed border-[var(--neu-accent)] hover:bg-[var(--neu-accent)]/5 cursor-pointer text-sm transition-all text-[var(--neu-accent)] bg-transparent">
-                          <Upload className="w-4 h-4" />
-                          <span>Choose Receipt Image</span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleFileChange}
-                            className="hidden"
-                          />
-                        </label>
-
-                        {/* Screenshot Thumbnail Preview */}
-                        {screenshotPreview && (
-                          <div className="flex items-center gap-3 p-2 rounded-lg bg-[var(--neu-base)] border border-[var(--neu-border)]">
-                            <img
-                              src={screenshotPreview}
-                              alt="Receipt Preview"
-                              className="w-12 h-12 object-cover rounded-md border border-[var(--neu-border)]"
-                            />
-                            <div className="text-left">
-                              <span className="text-xs font-semibold block text-[var(--neu-text)] max-w-[160px] truncate">{screenshot?.name}</span>
-                              <span className="text-[10px] text-[var(--neu-text-faint)] block">{(screenshot?.size / 1024).toFixed(1)} KB</span>
-                            </div>
+                    {/* EasyPaisa */}
+                    <div className="flex flex-col justify-between space-y-3 p-4 rounded-lg bg-[var(--neu-base)] border border-[var(--neu-border)]">
+                      <div>
+                        <span className="text-[var(--neu-accent)] uppercase text-[9px] tracking-wider font-bold block mb-3">📱 EasyPaisa</span>
+                        <div className="space-y-3 text-xs">
+                          <div>
+                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Account Title</span>
+                            <strong className="text-[var(--neu-text)] text-sm">Abdul Rehman</strong>
                           </div>
-                        )}
+                          <div>
+                            <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Bank Title</span>
+                            <strong className="text-[var(--neu-text)] text-sm">EasyPaisa</strong>
+                          </div>
+                          <div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">Mobile Number</span>
+                              <button
+                                type="button"
+                                onClick={() => handleCopy('03458612538', 'ep_mobile')}
+                                title={copiedField === 'ep_mobile' ? 'Copied!' : 'Copy Mobile Number'}
+                                className="p-1.5 rounded bg-[var(--neu-accent)]/15 text-[var(--neu-accent)] hover:bg-[var(--neu-accent)] hover:text-[var(--neu-base)] transition-all cursor-pointer border-none flex items-center justify-center"
+                              >
+                                {copiedField === 'ep_mobile' ? (
+                                  <Check className="w-3.5 h-3.5 text-green-500" />
+                                ) : (
+                                  <Copy className="w-3.5 h-3.5" />
+                                )}
+                              </button>
+                            </div>
+                            <strong className="text-[var(--neu-text)] text-sm tracking-widest block mt-0.5">0345 8612538</strong>
+                          </div>
+                          <div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-[var(--neu-text-faint)] uppercase text-[9px] tracking-wider block">IBAN</span>
+                              <button
+                                type="button"
+                                onClick={() => handleCopy('PK49TMFB0000000082342367', 'ep_iban')}
+                                title={copiedField === 'ep_iban' ? 'Copied!' : 'Copy IBAN'}
+                                className="p-1.5 rounded bg-[var(--neu-accent)]/15 text-[var(--neu-accent)] hover:bg-[var(--neu-accent)] hover:text-[var(--neu-base)] transition-all cursor-pointer border-none flex items-center justify-center"
+                              >
+                                {copiedField === 'ep_iban' ? (
+                                  <Check className="w-3.5 h-3.5 text-green-500" />
+                                ) : (
+                                  <Copy className="w-3.5 h-3.5" />
+                                )}
+                              </button>
+                            </div>
+                            <strong className="text-[var(--neu-text)] text-xs tracking-wider block mt-0.5 break-all">PK49 TMFB 0000 0000 8234 2367</strong>
+                          </div>
+                        </div>
                       </div>
-                      {errors.screenshot && (
-                        <p className="text-xs text-amber-500/90 flex items-center gap-1 mt-1">
-                          <AlertCircle className="w-3 h-3" /> {errors.screenshot}
-                        </p>
+                    </div>
+
+                  </div>
+
+                  {/* Screenshot File Upload */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-[var(--neu-text-muted)] block">
+                      Upload Receipt Screenshot <span className="text-[var(--neu-accent)]">*</span>
+                    </label>
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                      <label className="flex items-center justify-center gap-2 px-5 py-3 rounded-lg border border-dashed border-[var(--neu-accent)] hover:bg-[var(--neu-accent)]/5 cursor-pointer text-sm transition-all text-[var(--neu-accent)] bg-transparent">
+                        <Upload className="w-4 h-4" />
+                        <span>Choose Receipt Image</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileChange}
+                          className="hidden"
+                        />
+                      </label>
+
+                      {/* Screenshot Thumbnail Preview */}
+                      {screenshotPreview && (
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-[var(--neu-base)] border border-[var(--neu-border)]">
+                          <img
+                            src={screenshotPreview}
+                            alt="Receipt Preview"
+                            className="w-12 h-12 object-cover rounded-md border border-[var(--neu-border)]"
+                          />
+                          <div className="text-left">
+                            <span className="text-xs font-semibold block text-[var(--neu-text)] max-w-[160px] truncate">{screenshot?.name}</span>
+                            <span className="text-[10px] text-[var(--neu-text-faint)] block">{(screenshot?.size / 1024).toFixed(1)} KB</span>
+                          </div>
+                        </div>
                       )}
-                      <p className="text-[9px] text-[var(--neu-text-faint)] leading-normal mt-1">
-                        Please upload an image screenshot of your mobile banking transfer or deposit slip. Max size 5MB.
+                    </div>
+                    {errors.screenshot && (
+                      <p className="text-xs text-amber-500/90 flex items-center gap-1 mt-1">
+                        <AlertCircle className="w-3 h-3" /> {errors.screenshot}
+                      </p>
+                    )}
+                    <p className="text-[9px] text-[var(--neu-text-faint)] leading-normal mt-1">
+                      Please upload an image screenshot of your mobile banking transfer or deposit slip. Max size 5MB.
+                    </p>
+                  </div>
+
+                  <p className="text-xs text-[var(--neu-text-muted)] italic leading-relaxed border-t border-[var(--neu-border)] pt-4">
+                    ⚠️ <strong>Note:</strong> Your session will be booked under "Pending Verification" until our accounts team verifies your transfer screenshot.
+                  </p>
+
+                  <a
+                    href="https://wa.me/923458612538"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-3 p-3 rounded-xl bg-green-500/8 border border-green-500/20 hover:border-green-500/50 hover:bg-green-500/12 transition-all group"
+                  >
+                    <span className="text-lg leading-none">🌍</span>
+                    <div className="text-left">
+                      <p className="text-xs font-bold text-[var(--neu-text)] group-hover:text-green-400 transition-colors">
+                        International Clients
+                      </p>
+                      <p className="text-[10px] text-[var(--neu-text-muted)] leading-relaxed">
+                        For international transactions, please contact us on WhatsApp to arrange payment.
                       </p>
                     </div>
-
-                    <p className="text-xs text-[var(--neu-text-muted)] italic leading-relaxed border-t border-[var(--neu-border)] pt-4">
-                      ⚠️ <strong>Note:</strong> Your session will be booked under "Pending Verification" until our accounts team verifies your transfer screenshot.
-                    </p>
-
-                    <a
-                      href="https://wa.me/923458612538"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex items-center gap-3 p-3 rounded-xl bg-green-500/8 border border-green-500/20 hover:border-green-500/50 hover:bg-green-500/12 transition-all group"
-                    >
-                      <span className="text-lg leading-none">🌍</span>
-                      <div className="text-left">
-                        <p className="text-xs font-bold text-[var(--neu-text)] group-hover:text-green-400 transition-colors">
-                          International Clients
-                        </p>
-                        <p className="text-[10px] text-[var(--neu-text-muted)] leading-relaxed">
-                          For international transactions, please contact us on WhatsApp to arrange payment.
-                        </p>
-                      </div>
-                      <span className="ml-auto text-green-500 text-lg">↗</span>
-                    </a>
-                  </motion.div>
+                    <span className="ml-auto text-green-500 text-lg">↗</span>
+                  </a>
+                </motion.div>
               </AnimatePresence>
             </div>
 
@@ -939,7 +936,7 @@ export default function BookingPage() {
               >
                 {isSubmitting ? 'Submitting...' : 'Submit for Verification'}
               </button>
-              
+
               <p className="text-[10px] text-[var(--neu-text-faint)] max-w-sm mx-auto leading-normal">
                 By completing booking, you agree to our 24-hour cancellation policy.
               </p>
@@ -964,7 +961,7 @@ export default function BookingPage() {
               <strong className="text-sm md:text-base font-bold text-[var(--neu-text)]">{selectedPackage.name}</strong>
               <span className="text-xs md:text-sm text-[var(--neu-text-muted)] ml-2">( {selectedPackage.price} )</span>
             </div>
-            
+
             <button
               onClick={scrollToForm}
               className="px-5 py-2.5 rounded-lg text-xs font-bold bg-[var(--neu-accent)] hover:bg-[var(--neu-accent-hover)] text-[var(--neu-base)] transition-colors cursor-pointer shadow-md border-none"
